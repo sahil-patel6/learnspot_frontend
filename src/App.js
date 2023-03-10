@@ -1,14 +1,24 @@
 import React from 'react';
-import {
-  ChakraProvider,
-  Center,
-  theme,
-} from '@chakra-ui/react';
+import { ChakraProvider, Switch, theme } from '@chakra-ui/react';
+import NoPage from './Components/NoPage';
+import SignInPage from './SignInPage/SignInPage';
+import HomePage from './HomePage/HomePage';
+import { BrowserRouter, Routes, Route, Sw } from 'react-router-dom';
+import SemestersPage from './Semesters/SemestersPage';
+import SubjectsPage from './Subjects/SubjectsPage';
 
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <Center>Hello World</Center>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<HomePage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="department/:department_id/semesters" element={<SemestersPage />} />
+          <Route path="department/:department_id/semesters/:semester_id/subjects" element={<SubjectsPage />} />
+          <Route path="*" element={<NoPage />} />
+        </Routes>
+      </BrowserRouter>
     </ChakraProvider>
   );
 }
