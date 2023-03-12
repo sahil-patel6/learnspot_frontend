@@ -30,7 +30,7 @@ function NavBar(props) {
       </HStack>
       <Spacer />
       {props.user != null && props.user._id != null ? (
-        <Button colorScheme="red" type="submit" onClick={logout}>
+        <Button colorScheme="red" type="submit" onClick={logout} mx={3}>
           Log out
         </Button>
       ) : null}

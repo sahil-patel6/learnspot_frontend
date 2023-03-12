@@ -22,39 +22,37 @@ import { SubjectCard } from './SubjectCard';
 import { SubjectModal } from './SubjectModal';
 
 const SubjectsPage = props => {
-  const { department_id,semester_id } = useParams();
-  console.log(department_id,semester_id);
+  const { department_id, semester_id } = useParams();
+  console.log(department_id, semester_id);
   const [user, setUser] = useState(null);
   const [subjects, setSubjects] = useState(null);
+  const [activeSubject, setActiveSubject] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isCreateSubjectOpenModal, setIsCreateSubjectOpenModal] =
-    useState(false);
-  const [isUpdateSubjectOpenModal, setIsUpdateSubjectOpenModal] =
-    useState(false);
+  const [isSubjectOpenModal, setIsSubjectOpenModal] = useState(false);
 
   const toast = useToast();
 
-  const onOpenCreateSubjectModal = () => setIsCreateSubjectOpenModal(true);
-  const onCloseCreateSubjectModal = subject => {
-    setIsCreateSubjectOpenModal(false);
+  const onOpenCreateSubjectModal = () => {
+    setIsSubjectOpenModal(true);
+    setActiveSubject(null);
+  };
+  const onCloseSubjectModal = subject => {
+    setIsSubjectOpenModal(false);
     if (subject) {
       getSubjects(user);
     }
   };
 
-  const onOpenUpdateSubjectModal = () => setIsUpdateSubjectOpenModal(true);
-  const onCloseUpdateSubjectModal = subject => {
-    setIsUpdateSubjectOpenModal(false);
-    console.log(`SUBJECTTTT: ${subject}`)
-    if (subject) {
-      getSubjects(user);
-    }
+  const onOpenUpdateSubjectModal = subject => {
+    setIsSubjectOpenModal(true);
+    setActiveSubject(subject);
   };
 
   const getSubjects = async user => {
     try {
       setSubjects(null);
+      setActiveSubject(null);
       setIsLoading(true);
       const result = await axios.get(
         API.GET_ALL_SUBJECTS(semester_id, user._id),
@@ -92,7 +90,6 @@ const SubjectsPage = props => {
       } else {
         getSubjects(temp);
       }
-      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       toast({
@@ -108,10 +105,10 @@ const SubjectsPage = props => {
   }, []);
 
   return (
-    <VStack align={'flex-start'}>
+    <VStack align={'flex-start'} width={'100%'} height={isLoading || subjects ==null || subjects.length == 0 ?  "100vh" : "full"}>
       <NavBar user={user} />
       {isLoading ? (
-        <Center width={'100vw'} height={window.screen.height - 250}>
+        <Center width={'100%'} height={'100%'}>
           <Flex>
             <CircularProgress isIndeterminate color="green.300" />
           </Flex>
@@ -122,8 +119,11 @@ const SubjectsPage = props => {
           paddingTop={5}
           paddingRight={20}
           align={'flex-start'}
+          height={'100%'}
+          width={'100%'}
+          paddingBottom={10}
         >
-          <HStack minW={window.screen.width - 150} align={'center'}>
+          <HStack width={'100%'} align={'center'}>
             <Text fontSize={20} fontWeight={'bold'}>
               All Subjects:
             </Text>
@@ -131,10 +131,19 @@ const SubjectsPage = props => {
             <Button onClick={onOpenCreateSubjectModal}>Create Subject</Button>
           </HStack>
           <Box h={3}></Box>
-          <Wrap>
-            {subjects &&
-              subjects.map(subject => (
-                <WrapItem key={subject._id} my={500}>
+          {subjects == null || subjects.length == 0 ? (
+            <Center width={'100%'} height={'100%'}>
+              <Flex>
+                <Text fontSize={'3xl'} fontWeight={'semibold'}>
+                  No Subjects Found
+                </Text>
+              </Flex>
+            </Center>
+          ) : (
+            <Wrap>
+              {subjects &&
+                subjects.map(subject => (
+                  <WrapItem key={subject._id}>
                     <SubjectCard
                       subject={subject}
                       reloadSubjects={getSubjects}
@@ -142,21 +151,15 @@ const SubjectsPage = props => {
                       user={user}
                     />
                     <Box mx={5} my={5}></Box>
-                    <SubjectModal
-                      isOpen={isUpdateSubjectOpenModal}
-                      onClose={onCloseUpdateSubjectModal}
-                      user={user}
-                      subject={subject}
-                      mode={'Update'}
-                    />
-                </WrapItem>
-              ))}
-          </Wrap>
+                  </WrapItem>
+                ))}
+            </Wrap>
+          )}
           <SubjectModal
-            isOpen={isCreateSubjectOpenModal}
-            onClose={onCloseCreateSubjectModal}
+            isOpen={isSubjectOpenModal}
+            onClose={onCloseSubjectModal}
             user={user}
-            mode={'Create'}
+            activeSubject={activeSubject}
             department_id={department_id}
             semester_id={semester_id}
           />

@@ -9,7 +9,6 @@ import {
   Text,
   Box,
   Button,
-  Flex,
   HStack,
   Spacer,
   useToast,
@@ -28,7 +27,7 @@ export const DepartmentCard = props => {
   }
 
   const onUpdateDepartment = () => {
-    props.onOpenUpdateDepartmentModal();
+    props.onOpenUpdateDepartmentModal(props.department);
   };
 
   const onDeleteDepartment = async () => {
@@ -45,7 +44,7 @@ export const DepartmentCard = props => {
       );
       console.log(result.data);
       setIsLoading(false);
-      props.refreshDepartments();
+      props.reloadDepartments(props.user);
       toast({
         title: 'Deleted Department Successfully',
         status: 'success',
@@ -68,7 +67,7 @@ export const DepartmentCard = props => {
   };
 
   return (
-    <Card bg={'blackAlpha.100'}>
+    <Card bg={'blackAlpha.100'} maxW={"sm"}>
       <Link to={`/department/${props.department._id}/semesters`}>
         <CardHeader>
           <Heading size="md">Department Name: {props.department.name}</Heading>

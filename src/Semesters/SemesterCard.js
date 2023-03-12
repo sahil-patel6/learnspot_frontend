@@ -23,7 +23,7 @@ export const SemesterCard = props => {
   const toast = useToast();
 
   const onUpdateSemester = () => {
-    props.onOpenUpdateSemesterModal();
+    props.onOpenUpdateSemesterModal(props.semester);
   };
 
   const onDeleteSemester = async () => {
@@ -63,14 +63,14 @@ export const SemesterCard = props => {
   };
 
   return (
-    <Card bg={'blackAlpha.100'}>
-      <Link to={props.semester.length != 0 ? `${props.semester._id}/subjects` : null}>
+    <Card bg={'blackAlpha.100'} maxW={"sm"}>
+      <Link to={`${props.semester._id}/subjects`}>
         <CardHeader>
           <Heading size="md">Semester Name: {props.semester.name}</Heading>
         </CardHeader>
       </Link>
       <CardBody>
-        <Link to={props.semester.length != 0 ? `${props.semester._id}/subjects` : null}>
+        <Link to={`${props.semester._id}/subjects`}>
           <Stack divider={<StackDivider />} spacing="4">
             <Box>
               <Heading size="xs" textTransform="uppercase">

@@ -27,12 +27,12 @@ export const SemesterModal = props => {
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{props.mode} Semester Form</ModalHeader>
+          <ModalHeader>{props.activeSemester == null ? "Create" : "Update"} Semester Form</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <Formik
               initialValues={{
-                name: props.semester != null ? props.semester.name : '',
+                name: props.activeSemester != null ? props.activeSemester.name : '',
               }}
               validateOnChange={false}
               validateOnBlur={false}
@@ -45,7 +45,7 @@ export const SemesterModal = props => {
                 try {
                   console.log(props.user._id);
                   let result = null;
-                  if (props.mode == 'Create') {
+                  if (props.activeSemester == null) {
                     result = await axios.post(
                       API.CREATE_SEMESTER(props.user._id),
                       {
@@ -60,7 +60,7 @@ export const SemesterModal = props => {
                     );
                   } else {
                     result = await axios.put(
-                      API.UPDATE_SEMESTER(props.semester._id, props.user._id),
+                      API.UPDATE_SEMESTER(props.activeSemester._id, props.user._id),
                       {
                         name: values.name,
                       },
@@ -75,7 +75,7 @@ export const SemesterModal = props => {
                   setIsLoading(false);
                   props.onClose(result.data);
                   toast({
-                    title: `${props.mode}d semester Successfully`,
+                    title: `${props.activeSemester == null ? "Created" : "Updated"} semester Successfully`,
                     status: 'success',
                     duration: '2000',
                     isClosable: true,
@@ -113,7 +113,7 @@ export const SemesterModal = props => {
                       isLoading={isLoading}
                       type="submit"
                     >
-                      {props.mode} Semester
+                      {props.activeSemester == null ? "Create" : "Update"} Semester
                     </Button>
                     <Button onClick={()=>props.onClose()}>Cancel</Button>
                   </ModalFooter>

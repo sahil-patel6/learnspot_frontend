@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Modal,
   ModalBody,
@@ -68,9 +68,6 @@ export const SubjectModal = props => {
     setPickedSubjectImage(null);
   };
 
-  if (props.subject) {
-    console.log(`SUBJECTMODEL: ${props.subject._id}`);
-  }
   return (
     <>
       <Modal
@@ -82,13 +79,13 @@ export const SubjectModal = props => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{props.mode} Subject Form</ModalHeader>
+          <ModalHeader>{props.activeSubject == null ? "Create" : "Update"} Subject Form</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <Formik
               initialValues={{
-                name: props.subject != null ? props.subject.name : '',
-                credits: props.subject != null ? props.subject.credits : 2,
+                name: props.activeSubject != null ? props.activeSubject.name : '',
+                credits: props.activeSubject != null ? props.activeSubject.credits : 2,
               }}
               validateOnChange={false}
               validateOnBlur={false}
@@ -103,7 +100,7 @@ export const SubjectModal = props => {
                 try {
                   console.log(props.user._id);
                   let result = null;
-                  if (props.mode == 'Create') {
+                  if (props.activeSubject == null) {
                     if (pickedSubjectImage == null) {
                       return toast({
                         title: 'Please pick an image',
@@ -149,7 +146,7 @@ export const SubjectModal = props => {
                         onCloseModal();
                         props.onClose(result.data);
                         toast({
-                          title: `${props.mode}d Subject Successfully`,
+                          title: `${props.activeSubject == null ? "Created" : "Updated"} Subject Successfully`,
                           status: 'success',
                           duration: '2000',
                           isClosable: true,
@@ -160,8 +157,8 @@ export const SubjectModal = props => {
                   } else {
                     setIsLoading(true);
                     if (pickedSubjectImage) {
-                      const deleteSnapshot = await deleteObject(
-                        ref(firebase_storage, props.subject.fcs_pic_path)
+                      await deleteObject(
+                        ref(firebase_storage, props.activeSubject.fcs_pic_path)
                       );
                       var file_info = getFileNameWithExt(pickedSubjectImage);
                       console.log(pickedSubjectImage);
@@ -178,16 +175,16 @@ export const SubjectModal = props => {
                         pickedSubjectImage
                       );
                       const download_url = await getDownloadURL(uploadSnapshot.ref);
-                      props.subject.pic_url = download_url;
-                      props.subject.fcs_pic_path = subject_image_fcs_path;
+                      props.activeSubject.pic_url = download_url;
+                      props.activeSubject.fcs_pic_path = subject_image_fcs_path;
                     }
                     result = await axios.put(
-                      API.UPDATE_SUBJECT(props.subject._id, props.user._id),
+                      API.UPDATE_SUBJECT(props.activeSubject._id, props.user._id),
                       {
                         name: values.name,
                         credits: values.credits,
-                        pic_url: props.subject.pic_url,
-                        fcs_pic_path: props.subject.fcs_pic_path,
+                        pic_url: props.activeSubject.pic_url,
+                        fcs_pic_path: props.activeSubject.fcs_pic_path,
                       },
                       {
                         headers: {
@@ -202,7 +199,7 @@ export const SubjectModal = props => {
                     onCloseModal();
                     props.onClose(result.data);
                     toast({
-                      title: `${props.mode}d Subject Successfully`,
+                      title: `${props.activeSubject == null ? "Created" : "Updated"} Subject Successfully`,
                       status: 'success',
                       duration: '2000',
                       isClosable: true,
@@ -243,9 +240,9 @@ export const SubjectModal = props => {
                       fit="cover"
                       onClick={pick_image}
                     />
-                  ) : props.subject != null ? (
+                  ) : props.activeSubject != null ? (
                     <Image
-                      src={props.subject.pic_url}
+                      src={props.activeSubject.pic_url}
                       borderRadius="lg"
                       height={225}
                       width={'sm'}
@@ -290,7 +287,7 @@ export const SubjectModal = props => {
                       isLoading={isLoading}
                       type="submit"
                     >
-                      {props.mode} Subject
+                      {props.activeSubject == null ? "Create" : "Update"} Subject
                     </Button>
                     <Button
                       onClick={() => {

@@ -27,16 +27,16 @@ export const DepartmentModal = props => {
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{props.mode} Department Form</ModalHeader>
+          <ModalHeader>{props.activeDepartment==null?"Create": "Update"} Department Form</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <Formik
               initialValues={{
-                name: props.department != null ? props.department.name : '',
+                name: props.activeDepartment != null ? props.activeDepartment.name : '',
                 description:
-                  props.department != null ? props.department.description : '',
+                  props.activeDepartment != null ? props.activeDepartment.description : '',
                 total_years:
-                  props.department != null ? props.department.total_years : '',
+                  props.activeDepartment != null ? props.activeDepartment.total_years : '',
               }}
               validateOnChange={false}
               validateOnBlur={false}
@@ -59,7 +59,7 @@ export const DepartmentModal = props => {
                 try {
                   console.log(props.user._id);
                   let result = null;
-                  if (props.mode == 'Create') {
+                  if (props.activeDepartment == null) {
                     result = await axios.post(
                       API.CREATE_DEPARTMENT(props.user._id),
                       {
@@ -76,7 +76,7 @@ export const DepartmentModal = props => {
                   } else {
                     result = await axios.put(
                       API.UPDATE_DEPARTMENT(
-                        props.department._id,
+                        props.activeDepartment._id,
                         props.user._id
                       ),
                       {
@@ -96,7 +96,7 @@ export const DepartmentModal = props => {
                   setIsLoading(false);
                   props.onClose(result.data);
                   toast({
-                    title: `${props.mode}d Department Successfully`,
+                    title: `${props.activeDepartment == null ? "Created" : "Updated"} Department Successfully`,
                     status: 'success',
                     duration: '2000',
                     isClosable: true,
@@ -157,7 +157,7 @@ export const DepartmentModal = props => {
                       isLoading={isLoading}
                       type="submit"
                     >
-                      {props.mode} Department
+                      {props.activeDepartment == null ? "Create" : "Update"} Department
                     </Button>
                     <Button onClick={()=>props.onClose()}>Cancel</Button>
                   </ModalFooter>

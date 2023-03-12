@@ -23,30 +23,27 @@ import { Link, useNavigate } from 'react-router-dom';
 const HomePage = () => {
   const [user, setUser] = useState(null);
   const [departments, setDepartments] = useState(null);
+  const [activeDepartment, setActiveDepartment] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const [isCreateDepartmentOpenModal, setIsCreateDepartmentOpenModal] =
-    useState(false);
-  const [isUpdateDepartmentOpenModal, setIsUpdateDepartmentOpenModal] =
-    useState(false);
+  const [isDepartmentOpenModal, setIsDepartmentOpenModal] = useState(false);
 
   const toast = useToast();
 
-  const onOpenCreateDepartmentModal = () =>
-    setIsCreateDepartmentOpenModal(true);
-  const onCloseCreateDepartmentModal = department => {
-    setIsCreateDepartmentOpenModal(false);
-    if (department) {
-      getDepartments(user);
-    }
+  const onOpenCreateDepartmentModal = () => {
+    setIsDepartmentOpenModal(true);
+    setActiveDepartment(null);
   };
 
-  const onOpenUpdateDepartmentModal = () =>
-    setIsUpdateDepartmentOpenModal(true);
-  const onCloseUpdateDepartmentModal = department => {
-    setIsUpdateDepartmentOpenModal(false);
+  const onOpenUpdateDepartmentModal = department => {
+    setIsDepartmentOpenModal(true);
+    setActiveDepartment(department);
+  };
+
+  const onCloseDepartmentModal = department => {
+    setIsDepartmentOpenModal(false);
     if (department) {
       getDepartments(user);
     }
@@ -55,6 +52,7 @@ const HomePage = () => {
   const getDepartments = async user => {
     try {
       setDepartments(null);
+      setActiveDepartment(null);
       setIsLoading(true);
       const result = await axios.get(API.GET_ALL_DEPARTMENTS(user._id), {
         headers: {
@@ -68,7 +66,7 @@ const HomePage = () => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response.data.error,
+        description: error.response,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -86,11 +84,10 @@ const HomePage = () => {
       if (temp == null || temp._id == null || temp.token == null) {
         console.log('INSIDE YEAY');
         // window.location.href = '/signin';
-        navigate("/signin")
+        navigate('/signin');
       } else {
         getDepartments(temp);
       }
-      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       toast({
@@ -106,10 +103,10 @@ const HomePage = () => {
   }, []);
 
   return (
-    <VStack align={'flex-start'}>
+    <VStack align={'flex-start'}  width={'100%'} height={isLoading || departments ==null || departments.length == 0 ?  "100vh" : "full"}>
       <NavBar user={user} />
       {isLoading ? (
-        <Center width={'100vw'} height={window.screen.height - 250}>
+        <Center width={'100%'} height={'100%'}>
           <Flex>
             <CircularProgress isIndeterminate color="green.300" />
           </Flex>
@@ -120,8 +117,11 @@ const HomePage = () => {
           paddingTop={5}
           paddingRight={20}
           align={'flex-start'}
+          height={'100%'}
+          width={'100%'}
+          paddingBottom={10}
         >
-          <HStack minW={window.screen.width - 150} align={'center'}>
+          <HStack width={'100%'} align={'center'}>
             <Text fontSize={20} fontWeight={'bold'}>
               All DEPARTMENTS:
             </Text>
@@ -131,11 +131,19 @@ const HomePage = () => {
             </Button>
           </HStack>
           <Box h={3}></Box>
-          <Wrap>
-            {departments &&
-              departments.map(department => (
-                <WrapItem key={department._id} my={500}>
-                  {/* <Link to={`/department/${department._id}/semesters`}> */}
+          {departments == null || departments.length == 0 ? (
+            <Center width={'100%'} height={'100%'}>
+              <Flex>
+                <Text fontSize={'3xl'} fontWeight={'semibold'}>
+                  No Departments Found
+                </Text>
+              </Flex>
+            </Center>
+          ) : (
+            <Wrap>
+              {departments &&
+                departments.map(department => (
+                  <WrapItem key={department._id}>
                     <DepartmentCard
                       department={department}
                       reloadDepartments={getDepartments}
@@ -143,22 +151,15 @@ const HomePage = () => {
                       user={user}
                     />
                     <Box mx={5} my={5}></Box>
-                    <DepartmentModal
-                      isOpen={isUpdateDepartmentOpenModal}
-                      onClose={onCloseUpdateDepartmentModal}
-                      user={user}
-                      department={department}
-                      mode={'Update'}
-                    />
-                  {/* </Link> */}
-                </WrapItem>
-              ))}
-          </Wrap>
+                  </WrapItem>
+                ))}
+            </Wrap>
+          )}
           <DepartmentModal
-            isOpen={isCreateDepartmentOpenModal}
-            onClose={onCloseCreateDepartmentModal}
+            isOpen={isDepartmentOpenModal}
+            onClose={onCloseDepartmentModal}
             user={user}
-            mode={'Create'}
+            activeDepartment={activeDepartment}
           />
         </VStack>
       )}

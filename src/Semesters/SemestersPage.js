@@ -19,34 +19,31 @@ import { API } from '../utils/API';
 import { SemesterModal } from './SemesterModal';
 import { SemesterCard } from './SemesterCard';
 import { useNavigate, useParams } from 'react-router';
-import { Link } from 'react-router-dom';
 
 const SemestersPage = props => {
   const { department_id } = useParams();
   console.log(department_id);
   const [user, setUser] = useState(null);
   const [semesters, setSemesters] = useState(null);
+  const [activeSemester, setActiveSemester] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const [isCreateSemesterOpenModal, setIsCreateSemesterOpenModal] =
-    useState(false);
-  const [isUpdateSemesterOpenModal, setIsUpdateSemesterOpenModal] =
-    useState(false);
+  const [isSemesterOpenModal, setIsSemesterOpenModal] = useState(false);
 
   const toast = useToast();
 
-  const onOpenCreateSemesterModal = () => setIsCreateSemesterOpenModal(true);
-  const onCloseCreateSemesterModal = Semester => {
-    setIsCreateSemesterOpenModal(false);
-    if (Semester) {
-      getSemesters(user);
-    }
+  const onOpenCreateSemesterModal = () => {
+    setIsSemesterOpenModal(true);
+    setActiveSemester(null);
+  };
+  const onOpenUpdateSemesterModal = semester => {
+    setIsSemesterOpenModal(true);
+    setActiveSemester(semester);
   };
 
-  const onOpenUpdateSemesterModal = () => setIsUpdateSemesterOpenModal(true);
-  const onCloseUpdateSemesterModal = Semester => {
-    setIsUpdateSemesterOpenModal(false);
+  const onCloseSemesterModal = Semester => {
+    setIsSemesterOpenModal(false);
     if (Semester) {
       getSemesters(user);
     }
@@ -55,6 +52,7 @@ const SemestersPage = props => {
   const getSemesters = async user => {
     try {
       setSemesters(null);
+      setActiveSemester(null);
       setIsLoading(true);
       const result = await axios.get(
         API.GET_ALL_SEMESTERS(department_id, user._id),
@@ -89,11 +87,10 @@ const SemestersPage = props => {
       if (temp == null || temp._id == null || temp.token == null) {
         console.log('INSIDE YEAY');
         // window.location.href = '/signin';
-        navigate("/signin")
+        navigate('/signin');
       } else {
         getSemesters(temp);
       }
-      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       toast({
@@ -109,10 +106,10 @@ const SemestersPage = props => {
   }, []);
 
   return (
-    <VStack align={'flex-start'}>
+    <VStack align={'flex-start'} width={'100%'} height={isLoading || semesters ==null || semesters.length == 0 ?  "100vh" : "full"}>
       <NavBar user={user} />
       {isLoading ? (
-        <Center width={'100vw'} height={window.screen.height - 250}>
+        <Center width={'100%'} height={'100%'}>
           <Flex>
             <CircularProgress isIndeterminate color="green.300" />
           </Flex>
@@ -123,8 +120,11 @@ const SemestersPage = props => {
           paddingTop={5}
           paddingRight={20}
           align={'flex-start'}
+          height={'100%'}
+          width={'100%'}
+          paddingBottom={10}
         >
-          <HStack minW={window.screen.width - 150} align={'center'}>
+          <HStack width={'100%'} align={'center'}>
             <Text fontSize={20} fontWeight={'bold'}>
               All Semesters:
             </Text>
@@ -132,10 +132,19 @@ const SemestersPage = props => {
             <Button onClick={onOpenCreateSemesterModal}>Create Semester</Button>
           </HStack>
           <Box h={3}></Box>
-          <Wrap>
-            {semesters &&
-              semesters.map(semester => (
-                <WrapItem key={semester._id} my={500}>
+          {semesters == null || semesters.length == 0 ? (
+            <Center width={'100%'} height={'100%'}>
+              <Flex>
+                <Text fontSize={'3xl'} fontWeight={'semibold'}>
+                  No Semesters Found
+                </Text>
+              </Flex>
+            </Center>
+          ) : (
+            <Wrap>
+              {semesters &&
+                semesters.map(semester => (
+                  <WrapItem key={semester._id}>
                     <SemesterCard
                       semester={semester}
                       reloadSemesters={getSemesters}
@@ -143,22 +152,15 @@ const SemestersPage = props => {
                       user={user}
                     />
                     <Box mx={5} my={5}></Box>
-                    <SemesterModal
-                      isOpen={isUpdateSemesterOpenModal}
-                      onClose={onCloseUpdateSemesterModal}
-                      user={user}
-                      semester={semester}
-                      mode={'Update'}
-                    />
-                  {/* </Link> */}
-                </WrapItem>
-              ))}
-          </Wrap>
+                  </WrapItem>
+                ))}
+            </Wrap>
+          )}
           <SemesterModal
-            isOpen={isCreateSemesterOpenModal}
-            onClose={onCloseCreateSemesterModal}
+            isOpen={isSemesterOpenModal}
+            onClose={onCloseSemesterModal}
             user={user}
-            mode={'Create'}
+            activeSemester={activeSemester}
             department_id={department_id}
           />
         </VStack>

@@ -21,7 +21,7 @@ export const SubjectCard = props => {
   const toast = useToast();
 
   const onUpdateSubject = () => {
-    props.onOpenUpdateSubjectModal();
+    props.onOpenUpdateSubjectModal(props.subject);
   };
 
   const onDeleteSubject = async () => {
