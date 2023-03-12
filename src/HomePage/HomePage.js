@@ -113,9 +113,9 @@ const HomePage = () => {
         </Center>
       ) : (
         <VStack
-          paddingStart={20}
+          paddingStart={10}
           paddingTop={5}
-          paddingRight={20}
+          paddingRight={10}
           align={'flex-start'}
           height={'100%'}
           width={'100%'}
