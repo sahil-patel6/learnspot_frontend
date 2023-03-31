@@ -151,7 +151,7 @@ const SemestersPage = props => {
                       onOpenUpdateSemesterModal={onOpenUpdateSemesterModal}
                       user={user}
                     />
-                    <Box mx={5} my={5}></Box>
+                    <Box mx={2} my={10}></Box>
                   </WrapItem>
                 ))}
             </Wrap>

@@ -22,10 +22,6 @@ export const DepartmentCard = props => {
 
   const toast = useToast();
 
-  if (props.department) {
-    console.log(`DEPARTMENT${props.department._id}`);
-  }
-
   const onUpdateDepartment = () => {
     props.onOpenUpdateDepartmentModal(props.department);
   };
@@ -33,7 +29,6 @@ export const DepartmentCard = props => {
   const onDeleteDepartment = async () => {
     setIsLoading(true);
     try {
-      console.log(props.user._id);
       const result = await axios.delete(
         API.DELETE_DEPARTMENT(props.department._id, props.user._id),
         {
@@ -42,7 +37,6 @@ export const DepartmentCard = props => {
           },
         }
       );
-      console.log(result.data);
       setIsLoading(false);
       props.reloadDepartments(props.user);
       toast({
@@ -67,7 +61,7 @@ export const DepartmentCard = props => {
   };
 
   return (
-    <Card bg={'blackAlpha.100'} maxW={"sm"}>
+    <Card bg={'blackAlpha.100'} minW={"sm"} mb={5}>
       <Link to={`/department/${props.department._id}/semesters`}>
         <CardHeader>
           <Heading size="md">Department Name: {props.department.name}</Heading>

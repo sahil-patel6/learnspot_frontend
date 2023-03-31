@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, Text, Flex, Spacer, HStack, Button } from '@chakra-ui/react';
+import { useNavigate,useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 
 function NavBar(props) {
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   function onAppLogoCick() {
-    window.location.href = '/';
+    navigate('/');
   }
   function logout(e) {
     e.preventDefault();
-    console.log('LOG OUT');
-    localStorage.removeItem("user");
-    window.location.href = "/";
+    console.log('LOGGED OUT');
+    localStorage.removeItem('user');
+    navigate('/');
   }
-
-  // console.log(props);
 
   return (
     <Flex
@@ -27,6 +31,54 @@ function NavBar(props) {
       <HStack onClick={onAppLogoCick} cursor={'pointer'}>
         <Image src="/learnspot_logo.png" width="45px" height="45px" p={1} />
         <Text>Learn Spot</Text>
+        <Link to={'/'}>
+          <Text
+            ml={5}
+            paddingX={3}
+            paddingY={1.5}
+            borderRadius={3}
+            _hover={{ bg: 'blue.500' }}
+            bg={props.location == null ? 'blue.500' : '#2F855A'}
+          >
+            Home
+          </Text>
+        </Link>
+        <Link to={'/teachers'}>
+          <Text
+            ml={5}
+            paddingX={3}
+            paddingY={1.5}
+            borderRadius={3}
+            _hover={{ bg: 'blue.500' }}
+            bg={props.location == 'Teachers' ? 'blue.500' : '#2F855A'}
+          >
+            Teacher
+          </Text>
+        </Link>
+        <Link to={'/students'}>
+          <Text
+            ml={5}
+            paddingX={3}
+            paddingY={1.5}
+            borderRadius={3}
+            _hover={{ bg: 'blue.500' }}
+            bg={props.location == 'Students' ? 'blue.500' : '#2F855A'}
+          >
+            Students
+          </Text>
+        </Link>
+        <Link to={'/parents'}>
+          <Text
+            ml={5}
+            paddingX={3}
+            paddingY={1.5}
+            borderRadius={3}
+            _hover={{ bg: 'blue.500' }}
+            bg={props.location == 'Parents' ? 'blue.500' : '#2F855A'}
+          >
+            Parents
+          </Text>
+        </Link>
       </HStack>
       <Spacer />
       {props.user != null && props.user._id != null ? (

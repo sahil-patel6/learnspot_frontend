@@ -11,25 +11,31 @@ import {
   Spacer,
   useToast,
   Image,
+  Avatar,
+  WrapItem,
+  Wrap,
+  ListItem,
+  UnorderedList,
+  Center,
 } from '@chakra-ui/react';
 import { API } from '../utils/API';
 import axios from 'axios';
 
-export const SubjectCard = props => {
+export const TeacherCard = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
 
-  const onUpdateSubject = () => {
-    props.onOpenUpdateSubjectModal(props.subject);
+  const onUpdateTeacher = () => {
+    props.onOpenUpdateTeacherModal(props.teacher);
   };
 
-  const onDeleteSubject = async () => {
+  const onDeleteTeacher = async () => {
     setIsLoading(true);
     try {
       console.log(props.user._id);
       const result = await axios.delete(
-        API.DELETE_SUBJECT(props.subject._id, props.user._id),
+        API.DELETE_TEACHER(props.teacher._id, props.user._id),
         {
           headers: {
             Authorization: `Bearer ${props.user.token}`,
@@ -38,9 +44,9 @@ export const SubjectCard = props => {
       );
       console.log(result.data);
       setIsLoading(false);
-      props.reloadSubjects(props.user);
+      props.reloadTeachers(props.user);
       toast({
-        title: 'Deleted Subject Successfully',
+        title: 'Deleted Teacher Successfully',
         status: 'success',
         duration: '2000',
         isClosable: true,
@@ -59,37 +65,58 @@ export const SubjectCard = props => {
       setIsLoading(false);
     }
   };
-
   return (
-    <Card bg={'blackAlpha.100'} minW={'sm'} mb={5}>
+    <Card bg={'blackAlpha.100'} minW={'xs'} mb={5}>
       <CardBody>
-        <Image
-          src={props.subject.pic_url}
-          alt="Green double couch with wooden legs"
-          borderRadius="lg"
-          height={225}
-          width={'sm'}
-          align={"center"}
-          fit="cover"
-        />
+        <Center>
+          <WrapItem>
+            <Avatar
+              size="2xl"
+              name={props.teacher.name}
+              src={props.teacher.profile_pic}
+            />
+          </WrapItem>
+        </Center>
         <Stack mt="6" spacing="6">
-          <Heading size="md">{props.subject.name}</Heading>
+          <Heading size="md">{props.teacher.name}</Heading>
           <Box>
             <Heading size="xs" textTransform="uppercase">
-              Total Credits
+              Email:
             </Heading>
             <Text pt="2" size="xs">
-              {props.subject.credits}
+              {props.teacher.email}
             </Text>
           </Box>
+          <Box>
+            <Heading size="xs" textTransform="uppercase">
+              Phone No:
+            </Heading>
+            <Text pt="2" size="xs">
+              {props.teacher.phone}
+            </Text>
+          </Box>
+          <Box>
+            <Heading size="xs" textTransform="uppercase">
+              Subjects:
+            </Heading>
+            <Wrap>
+              <UnorderedList>
+                {props.teacher.subjects.map(subject => (
+                  <ListItem pt="2" size="xs" key={subject._id}>
+                    <Text>{subject.name}</Text>
+                  </ListItem>
+                ))}
+              </UnorderedList>
+            </Wrap>
+          </Box>
           <HStack>
-            <Button colorScheme={'blue'} onClick={onUpdateSubject}>
+            <Button colorScheme={'blue'} onClick={onUpdateTeacher}>
               Update
             </Button>
             <Spacer />
             <Button
               colorScheme={'red'}
-              onClick={onDeleteSubject}
+              onClick={onDeleteTeacher}
               isLoading={isLoading}
             >
               Delete

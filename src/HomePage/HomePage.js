@@ -82,7 +82,6 @@ const HomePage = () => {
       const temp = JSON.parse(localStorage.getItem('user'));
       setUser(temp);
       if (temp == null || temp._id == null || temp.token == null) {
-        console.log('INSIDE YEAY');
         // window.location.href = '/signin';
         navigate('/signin');
       } else {
@@ -104,7 +103,7 @@ const HomePage = () => {
 
   return (
     <VStack align={'flex-start'}  width={'100%'} height={isLoading || departments ==null || departments.length == 0 ?  "100vh" : "full"}>
-      <NavBar user={user} />
+      <NavBar user={user}/>
       {isLoading ? (
         <Center width={'100%'} height={'100%'}>
           <Flex>
@@ -150,7 +149,7 @@ const HomePage = () => {
                       onOpenUpdateDepartmentModal={onOpenUpdateDepartmentModal}
                       user={user}
                     />
-                    <Box mx={5} my={5}></Box>
+                    <Box mx={2} my={5}></Box>
                   </WrapItem>
                 ))}
             </Wrap>

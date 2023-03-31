@@ -17,53 +17,47 @@ import React, { useEffect, useState } from 'react';
 import NavBar from '../Components/NavBar';
 import { API } from '../utils/API';
 
-import { useParams } from 'react-router';
-import { SubjectCard } from './SubjectCard';
-import { SubjectModal } from './SubjectModal';
+import { TeacherCard } from './TeacherCard';
+import {TeacherModal } from './TeacherModal';
 
-const SubjectsPage = props => {
-  const { department_id, semester_id } = useParams();
-  console.log(department_id, semester_id);
+const TeachersPage = props => {
   const [user, setUser] = useState(null);
-  const [subjects, setSubjects] = useState(null);
-  const [activeSubject, setActiveSubject] = useState(null);
+  const [teachers, setTeachers] = useState(null);
+  const [activeTeacher, setActiveTeacher] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isSubjectOpenModal, setIsSubjectOpenModal] = useState(false);
+  const [isTeacherOpenModal, setIsTeacherOpenModal] = useState(false);
 
   const toast = useToast();
 
-  const onOpenCreateSubjectModal = () => {
-    setIsSubjectOpenModal(true);
-    setActiveSubject(null);
+  const onOpenCreateTeacherModal = () => {
+    setIsTeacherOpenModal(true);
+    setActiveTeacher(null);
   };
-  const onCloseSubjectModal = subject => {
-    setIsSubjectOpenModal(false);
-    if (subject) {
-      getSubjects(user);
+  const onCloseTeacherModal = teacher => {
+    setIsTeacherOpenModal(false);
+    if (teacher) {
+      getTeachers(user);
     }
   };
 
-  const onOpenUpdateSubjectModal = subject => {
-    setIsSubjectOpenModal(true);
-    setActiveSubject(subject);
+  const onOpenUpdateTeacherModal = teacher => {
+    setIsTeacherOpenModal(true);
+    setActiveTeacher(teacher);
   };
 
-  const getSubjects = async user => {
+  const getTeachers = async user => {
     try {
-      setSubjects(null);
-      setActiveSubject(null);
+      setTeachers(null);
+      setActiveTeacher(null);
       setIsLoading(true);
-      const result = await axios.get(
-        API.GET_ALL_SUBJECTS(semester_id, user._id),
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
+      const result = await axios.get(API.GET_ALL_TEACHERS(user._id), {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
       console.log(result.data);
-      setSubjects(result.data);
+      setTeachers(result.data);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -88,7 +82,7 @@ const SubjectsPage = props => {
         console.log('INSIDE YEAY');
         window.location.href = '/signin';
       } else {
-        getSubjects(temp);
+        getTeachers(temp);
       }
     } catch (error) {
       setIsLoading(false);
@@ -105,8 +99,14 @@ const SubjectsPage = props => {
   }, []);
 
   return (
-    <VStack align={'flex-start'} width={'100%'} height={isLoading || subjects ==null || subjects.length == 0 ?  "100vh" : "full"}>
-      <NavBar user={user} />
+    <VStack
+      align={'flex-start'}
+      width={'100%'}
+      height={
+        isLoading || teachers == null || teachers.length == 0 ? '100vh' : 'full'
+      }
+    >
+      <NavBar user={user} location={"Teacher"}/>
       {isLoading ? (
         <Center width={'100%'} height={'100%'}>
           <Flex>
@@ -125,29 +125,29 @@ const SubjectsPage = props => {
         >
           <HStack width={'100%'} align={'center'}>
             <Text fontSize={20} fontWeight={'bold'}>
-              All Subjects:
+              All Teachers:
             </Text>
             <Spacer />
-            <Button onClick={onOpenCreateSubjectModal}>Create Subject</Button>
+            <Button onClick={onOpenCreateTeacherModal}>Create Teacher</Button>
           </HStack>
           <Box h={3}></Box>
-          {subjects == null || subjects.length == 0 ? (
+          {teachers == null || teachers.length == 0 ? (
             <Center width={'100%'} height={'100%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
-                  No Subjects Found
+                  No Teachers Found
                 </Text>
               </Flex>
             </Center>
           ) : (
             <Wrap>
-              {subjects &&
-                subjects.map(subject => (
-                  <WrapItem key={subject._id}>
-                    <SubjectCard
-                      subject={subject}
-                      reloadSubjects={getSubjects}
-                      onOpenUpdateSubjectModal={onOpenUpdateSubjectModal}
+              {teachers &&
+                teachers.map(teacher => (
+                  <WrapItem key={teacher._id}>
+                    <TeacherCard
+                      teacher={teacher}
+                      reloadTeachers={getTeachers}
+                      onOpenUpdateTeacherModal={onOpenUpdateTeacherModal}
                       user={user}
                     />
                     <Box mx={2} my={5}></Box>
@@ -155,13 +155,11 @@ const SubjectsPage = props => {
                 ))}
             </Wrap>
           )}
-          <SubjectModal
-            isOpen={isSubjectOpenModal}
-            onClose={onCloseSubjectModal}
+          <TeacherModal
+            isOpen={isTeacherOpenModal}
+            onClose={onCloseTeacherModal}
             user={user}
-            activeSubject={activeSubject}
-            department_id={department_id}
-            semester_id={semester_id}
+            activeTeacher={activeTeacher}
           />
         </VStack>
       )}
@@ -169,4 +167,4 @@ const SubjectsPage = props => {
   );
 };
 
-export default SubjectsPage;
+export default TeachersPage;

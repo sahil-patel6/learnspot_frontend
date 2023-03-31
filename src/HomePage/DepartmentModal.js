@@ -54,10 +54,8 @@ export const DepartmentModal = props => {
                   .required('Total Years is required'),
               })}
               onSubmit={async (values, { setSubmitting }) => {
-                console.log('SUBMITED');
                 setIsLoading(true);
                 try {
-                  console.log(props.user._id);
                   let result = null;
                   if (props.activeDepartment == null) {
                     result = await axios.post(
@@ -91,8 +89,6 @@ export const DepartmentModal = props => {
                       }
                     );
                   }
-
-                  console.log(result.data);
                   setIsLoading(false);
                   props.onClose(result.data);
                   toast({

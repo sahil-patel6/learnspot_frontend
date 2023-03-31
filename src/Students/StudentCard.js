@@ -11,25 +11,31 @@ import {
   Spacer,
   useToast,
   Image,
+  Avatar,
+  WrapItem,
+  Wrap,
+  ListItem,
+  UnorderedList,
+  Center,
 } from '@chakra-ui/react';
 import { API } from '../utils/API';
 import axios from 'axios';
 
-export const SubjectCard = props => {
+export const StudentCard = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
 
-  const onUpdateSubject = () => {
-    props.onOpenUpdateSubjectModal(props.subject);
+  const onUpdateStudent = () => {
+    props.onOpenUpdateStudentModal(props.student);
   };
 
-  const onDeleteSubject = async () => {
+  const onDeleteStudent = async () => {
     setIsLoading(true);
     try {
       console.log(props.user._id);
       const result = await axios.delete(
-        API.DELETE_SUBJECT(props.subject._id, props.user._id),
+        API.DELETE_STUDENT(props.student._id, props.user._id),
         {
           headers: {
             Authorization: `Bearer ${props.user.token}`,
@@ -38,9 +44,9 @@ export const SubjectCard = props => {
       );
       console.log(result.data);
       setIsLoading(false);
-      props.reloadSubjects(props.user);
+      props.reloadStudents(props.user);
       toast({
-        title: 'Deleted Subject Successfully',
+        title: 'Deleted Student Successfully',
         status: 'success',
         duration: '2000',
         isClosable: true,
@@ -59,37 +65,59 @@ export const SubjectCard = props => {
       setIsLoading(false);
     }
   };
-
   return (
-    <Card bg={'blackAlpha.100'} minW={'sm'} mb={5}>
+    <Card bg={'blackAlpha.100'} minW={'xs'} mb={5}>
       <CardBody>
-        <Image
-          src={props.subject.pic_url}
-          alt="Green double couch with wooden legs"
-          borderRadius="lg"
-          height={225}
-          width={'sm'}
-          align={"center"}
-          fit="cover"
-        />
+        <Center>
+          <WrapItem>
+            <Avatar
+              size="2xl"
+              name={props.student.name}
+              src={props.student.profile_pic}
+            />
+          </WrapItem>
+        </Center>
         <Stack mt="6" spacing="6">
-          <Heading size="md">{props.subject.name}</Heading>
+          <Heading size="md">{props.student.name}</Heading>
           <Box>
             <Heading size="xs" textTransform="uppercase">
-              Total Credits
+              Email:
             </Heading>
             <Text pt="2" size="xs">
-              {props.subject.credits}
+              {props.student.email}
             </Text>
           </Box>
+          <Box>
+            <Heading size="xs" textTransform="uppercase">
+              Roll Number:
+            </Heading>
+            <Text pt="2" size="xs">
+              {props.student.roll_number}
+            </Text>
+          </Box>
+          <Box>
+            <Heading size="xs" textTransform="uppercase">
+              Phone No:
+            </Heading>
+            <Text pt="2" size="xs">
+              {props.student.phone}
+            </Text>
+          </Box>
+          <Box>
+            <Heading size="xs" textTransform="uppercase">
+              Semester:
+            </Heading>
+            {props.student.semester.name} (
+            {props.student.semester.department.name})
+          </Box>
           <HStack>
-            <Button colorScheme={'blue'} onClick={onUpdateSubject}>
+            <Button colorScheme={'blue'} onClick={onUpdateStudent}>
               Update
             </Button>
             <Spacer />
             <Button
               colorScheme={'red'}
-              onClick={onDeleteSubject}
+              onClick={onDeleteStudent}
               isLoading={isLoading}
             >
               Delete
