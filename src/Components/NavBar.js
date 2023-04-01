@@ -1,18 +1,16 @@
 import React from 'react';
 import { Image, Text, Flex, Spacer, HStack, Button } from '@chakra-ui/react';
-import { useNavigate, useLocation } from 'react-router';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 function NavBar(props) {
   const navigate = useNavigate();
 
-  function onAppLogoCick() {
-    navigate('/');
-  }
   function logout(e) {
     e.preventDefault();
     console.log('LOGGED OUT');
     localStorage.removeItem('user');
-    navigate('/');
+    navigate('/signin');
   }
 
   return (
@@ -25,10 +23,14 @@ function NavBar(props) {
       color={'white'}
       fontSize="16px"
     >
-      <HStack onClick={onAppLogoCick} cursor={'pointer'}>
-        <Image src="/learnspot_logo.png" width="45px" height="45px" p={1} />
-        <Text>Learn Spot</Text>
-        <a href="/">
+      <HStack>
+        <Link to={'/'}>
+          <HStack>
+            <Image src="/learnspot_logo.png" width="45px" height="45px" p={1} />
+            <Text>Learn Spot</Text>
+          </HStack>
+        </Link>
+        <Link to="/">
           <Text
             ml={5}
             paddingX={3}
@@ -39,8 +41,8 @@ function NavBar(props) {
           >
             Home
           </Text>
-        </a>
-        <a href="/teachers">
+        </Link>
+        <Link to={`/teachers`}>
           <Text
             ml={5}
             paddingX={3}
@@ -51,8 +53,8 @@ function NavBar(props) {
           >
             Teacher
           </Text>
-        </a>
-        <a href="/students">
+        </Link>
+        <Link to="/students">
           <Text
             ml={5}
             paddingX={3}
@@ -63,8 +65,8 @@ function NavBar(props) {
           >
             Students
           </Text>
-        </a>
-        <a href="/parents">
+        </Link>
+        <Link to="/parents">
           <Text
             ml={5}
             paddingX={3}
@@ -75,7 +77,7 @@ function NavBar(props) {
           >
             Parents
           </Text>
-        </a>
+        </Link>
       </HStack>
       <Spacer />
       {props.user != null && props.user._id != null ? (

@@ -132,7 +132,7 @@ const SemestersPage = props => {
             <Button onClick={onOpenCreateSemesterModal}>Create Semester</Button>
           </HStack>
           <Box h={3}></Box>
-          {semesters == null || semesters.length == 0 ? (
+          {semesters === null || semesters.length === 0 ? (
             <Center width={'100%'} height={'100%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>

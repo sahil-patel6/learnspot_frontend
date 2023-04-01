@@ -131,7 +131,7 @@ const ParentPage = props => {
             <Button onClick={onOpenCreateParentModal}>Create Parent</Button>
           </HStack>
           <Box h={3}></Box>
-          {parents == null || parents.length == 0 ? (
+          {parents === null || parents.length === 0 ? (
             <Center width={'100%'} height={'100%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>

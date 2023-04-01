@@ -131,7 +131,7 @@ const TeachersPage = props => {
             <Button onClick={onOpenCreateTeacherModal}>Create Teacher</Button>
           </HStack>
           <Box h={3}></Box>
-          {teachers == null || teachers.length == 0 ? (
+          {teachers === null || teachers.length === 0 ? (
             <Center width={'100%'} height={'100%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>

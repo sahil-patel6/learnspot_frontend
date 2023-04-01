@@ -130,7 +130,7 @@ const HomePage = () => {
             </Button>
           </HStack>
           <Box h={3}></Box>
-          {departments == null || departments.length == 0 ? (
+          {departments === null || departments.length === 0 ? (
             <Center width={'100%'} height={'100%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>

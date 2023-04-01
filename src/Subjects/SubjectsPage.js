@@ -131,7 +131,7 @@ const SubjectsPage = props => {
             <Button onClick={onOpenCreateSubjectModal}>Create Subject</Button>
           </HStack>
           <Box h={3}></Box>
-          {subjects == null || subjects.length == 0 ? (
+          {subjects === null || subjects.length === 0 ? (
             <Center width={'100%'} height={'100%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
