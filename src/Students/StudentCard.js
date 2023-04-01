@@ -10,12 +10,8 @@ import {
   HStack,
   Spacer,
   useToast,
-  Image,
   Avatar,
   WrapItem,
-  Wrap,
-  ListItem,
-  UnorderedList,
   Center,
 } from '@chakra-ui/react';
 import { API } from '../utils/API';

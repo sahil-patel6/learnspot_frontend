@@ -103,10 +103,10 @@ const StudentPage = props => {
       align={'flex-start'}
       width={'100%'}
       height={
-        isLoading || students == null || students.length == 0 ? '100vh' : 'full'
+        isLoading || students === null || students.length === 0 ? '100vh' : 'full'
       }
     >
-      <NavBar user={user} location={"Student"}/>
+      <NavBar user={user} location={"Students"}/>
       {isLoading ? (
         <Center width={'100%'} height={'100%'}>
           <Flex>

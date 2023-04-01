@@ -105,7 +105,7 @@ const SubjectsPage = props => {
   }, []);
 
   return (
-    <VStack align={'flex-start'} width={'100%'} height={isLoading || subjects ==null || subjects.length == 0 ?  "100vh" : "full"}>
+    <VStack align={'flex-start'} width={'100%'} height={isLoading || subjects === null || subjects.length === 0 ?  "100vh" : "full"}>
       <NavBar user={user} />
       {isLoading ? (
         <Center width={'100%'} height={'100%'}>

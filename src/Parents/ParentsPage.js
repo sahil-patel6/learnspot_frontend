@@ -16,57 +16,54 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import NavBar from '../Components/NavBar';
 import { API } from '../utils/API';
-import { DepartmentModal } from './DepartmentModal';
-import { DepartmentCard } from './DepartmentCard';
-import { useNavigate } from 'react-router-dom';
 
-const HomePage = () => {
+import { ParentCard } from './ParentCard';
+import {ParentModal } from './ParentModal';
+
+const ParentPage = props => {
   const [user, setUser] = useState(null);
-  const [departments, setDepartments] = useState(null);
-  const [activeDepartment, setActiveDepartment] = useState(null);
+  const [parents, setParents] = useState(null);
+  const [activeParent, setActiveParent] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const navigate = useNavigate();
-
-  const [isDepartmentOpenModal, setIsDepartmentOpenModal] = useState(false);
+  const [isParentOpenModal, setIsParentOpenModal] = useState(false);
 
   const toast = useToast();
 
-  const onOpenCreateDepartmentModal = () => {
-    setIsDepartmentOpenModal(true);
-    setActiveDepartment(null);
+  const onOpenCreateParentModal = () => {
+    setIsParentOpenModal(true);
+    setActiveParent(null);
   };
-
-  const onOpenUpdateDepartmentModal = department => {
-    setIsDepartmentOpenModal(true);
-    setActiveDepartment(department);
-  };
-
-  const onCloseDepartmentModal = department => {
-    setIsDepartmentOpenModal(false);
-    if (department) {
-      getDepartments(user);
+  const onCloseParentModal = parent => {
+    setIsParentOpenModal(false);
+    if (parent) {
+      getParents(user);
     }
   };
 
-  const getDepartments = async user => {
+  const onOpenUpdateParentModal = parent => {
+    setIsParentOpenModal(true);
+    setActiveParent(parent);
+  };
+
+  const getParents = async user => {
     try {
-      setDepartments(null);
-      setActiveDepartment(null);
+      setParents(null);
+      setActiveParent(null);
       setIsLoading(true);
-      const result = await axios.get(API.GET_ALL_DEPARTMENTS(user._id), {
+      const result = await axios.get(API.GET_ALL_PARENTS(user._id), {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
       console.log(result.data);
-      setDepartments(result.data);
+      setParents(result.data);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response,
+        description: error.response.data.error,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -82,10 +79,10 @@ const HomePage = () => {
       const temp = JSON.parse(localStorage.getItem('user'));
       setUser(temp);
       if (temp == null || temp._id == null || temp.token == null) {
-        // window.location.href = '/signin';
-        navigate('/signin');
+        console.log('INSIDE YEAY');
+        window.location.href = '/signin';
       } else {
-        getDepartments(temp);
+        getParents(temp);
       }
     } catch (error) {
       setIsLoading(false);
@@ -102,8 +99,14 @@ const HomePage = () => {
   }, []);
 
   return (
-    <VStack align={'flex-start'}  width={'100%'} height={isLoading || departments ===null || departments.length === 0 ?  "100vh" : "full"}>
-      <NavBar user={user}/>
+    <VStack
+      align={'flex-start'}
+      width={'100%'}
+      height={
+        isLoading || parents === null || parents.length === 0 ? '100vh' : 'full'
+      }
+    >
+      <NavBar user={user} location={"Parents"}/>
       {isLoading ? (
         <Center width={'100%'} height={'100%'}>
           <Flex>
@@ -122,31 +125,29 @@ const HomePage = () => {
         >
           <HStack width={'100%'} align={'center'}>
             <Text fontSize={20} fontWeight={'bold'}>
-              All DEPARTMENTS:
+              All Parents:
             </Text>
             <Spacer />
-            <Button onClick={onOpenCreateDepartmentModal}>
-              Create Department
-            </Button>
+            <Button onClick={onOpenCreateParentModal}>Create Parent</Button>
           </HStack>
           <Box h={3}></Box>
-          {departments == null || departments.length == 0 ? (
+          {parents == null || parents.length == 0 ? (
             <Center width={'100%'} height={'100%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
-                  No Departments Found
+                  No Parents Found
                 </Text>
               </Flex>
             </Center>
           ) : (
             <Wrap>
-              {departments &&
-                departments.map(department => (
-                  <WrapItem key={department._id}>
-                    <DepartmentCard
-                      department={department}
-                      reloadDepartments={getDepartments}
-                      onOpenUpdateDepartmentModal={onOpenUpdateDepartmentModal}
+              {parents &&
+                parents.map(parent => (
+                  <WrapItem key={parent._id}>
+                    <ParentCard
+                      parent={parent}
+                      reloadParents={getParents}
+                      onOpenUpdateParentModal={onOpenUpdateParentModal}
                       user={user}
                     />
                     <Box mx={2} my={5}></Box>
@@ -154,11 +155,11 @@ const HomePage = () => {
                 ))}
             </Wrap>
           )}
-          <DepartmentModal
-            isOpen={isDepartmentOpenModal}
-            onClose={onCloseDepartmentModal}
+          <ParentModal
+            isOpen={isParentOpenModal}
+            onClose={onCloseParentModal}
             user={user}
-            activeDepartment={activeDepartment}
+            activeParent={activeParent}
           />
         </VStack>
       )}
@@ -166,4 +167,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default ParentPage;

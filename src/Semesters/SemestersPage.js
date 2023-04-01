@@ -106,7 +106,7 @@ const SemestersPage = props => {
   }, []);
 
   return (
-    <VStack align={'flex-start'} width={'100%'} height={isLoading || semesters ==null || semesters.length == 0 ?  "100vh" : "full"}>
+    <VStack align={'flex-start'} width={'100%'} height={isLoading || semesters ===null || semesters.length === 0 ?  "100vh" : "full"}>
       <NavBar user={user} />
       {isLoading ? (
         <Center width={'100%'} height={'100%'}>

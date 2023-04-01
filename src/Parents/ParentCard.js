@@ -20,21 +20,21 @@ import {
 import { API } from '../utils/API';
 import axios from 'axios';
 
-export const TeacherCard = props => {
+export const ParentCard = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
 
-  const onUpdateTeacher = () => {
-    props.onOpenUpdateTeacherModal(props.teacher);
+  const onUpdateParent = () => {
+    props.onOpenUpdateParentModal(props.parent);
   };
 
-  const onDeleteTeacher = async () => {
+  const onDeleteParent = async () => {
     setIsLoading(true);
     try {
       console.log(props.user._id);
       const result = await axios.delete(
-        API.DELETE_TEACHER(props.teacher._id, props.user._id),
+        API.DELETE_PARENT(props.parent._id, props.user._id),
         {
           headers: {
             Authorization: `Bearer ${props.user.token}`,
@@ -43,9 +43,9 @@ export const TeacherCard = props => {
       );
       console.log(result.data);
       setIsLoading(false);
-      props.reloadTeachers(props.user);
+      props.reloadParents(props.user);
       toast({
-        title: 'Deleted Teacher Successfully',
+        title: 'Deleted Parent Successfully',
         status: 'success',
         duration: '2000',
         isClosable: true,
@@ -71,19 +71,19 @@ export const TeacherCard = props => {
           <WrapItem>
             <Avatar
               size="2xl"
-              name={props.teacher.name}
-              src={props.teacher.profile_pic}
+              name={props.parent.name}
+              src={props.parent.profile_pic}
             />
           </WrapItem>
         </Center>
         <Stack mt="6" spacing="6">
-          <Heading size="md">{props.teacher.name}</Heading>
+          <Heading size="md">{props.parent.name}</Heading>
           <Box>
             <Heading size="xs" textTransform="uppercase">
               Email:
             </Heading>
             <Text pt="2" size="xs">
-              {props.teacher.email}
+              {props.parent.email}
             </Text>
           </Box>
           <Box>
@@ -91,31 +91,31 @@ export const TeacherCard = props => {
               Phone No:
             </Heading>
             <Text pt="2" size="xs">
-              {props.teacher.phone}
+              {props.parent.phone}
             </Text>
           </Box>
           <Box>
             <Heading size="xs" textTransform="uppercase">
-              Subjects:
+              Students:
             </Heading>
             <Wrap>
               <UnorderedList>
-                {props.teacher.subjects.map(subject => (
-                  <ListItem pt="2" size="xs" key={subject._id}>
-                    <Text>{subject.name}</Text>
+                {props.parent.students.map(parent => (
+                  <ListItem pt="2" size="xs" key={parent._id}>
+                    <Text key={parent._id}>{parent.name}</Text>
                   </ListItem>
                 ))}
               </UnorderedList>
             </Wrap>
           </Box>
           <HStack>
-            <Button colorScheme={'blue'} onClick={onUpdateTeacher}>
+            <Button colorScheme={'blue'} onClick={onUpdateParent}>
               Update
             </Button>
             <Spacer />
             <Button
               colorScheme={'red'}
-              onClick={onDeleteTeacher}
+              onClick={onDeleteParent}
               isLoading={isLoading}
             >
               Delete

@@ -1,4 +1,4 @@
-class API {
+export class API {
   // static BASE_URL = "https://learnspot-api.up.railway.app/api/v1";
   static BASE_URL = 'http://192.168.1.7:8000/api/v1';
 
@@ -42,6 +42,6 @@ class API {
   static UPDATE_PARENT = (parent_id,admin_id) => `${this.BASE_URL}/parent/${parent_id}/admin/${admin_id}`;
   static DELETE_PARENT = (parent_id,admin_id) => `${this.BASE_URL}/parent/${parent_id}/admin/${admin_id}`;
 
-}
+  static GET_ALL_STUDENTS_BY_SEMESTER = (semester_id,admin_id) => `${this.BASE_URL}/students/${semester_id}/admin/${admin_id}`;
 
-exports.API = API;
+}

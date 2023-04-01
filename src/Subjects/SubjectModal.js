@@ -54,7 +54,7 @@ export const SubjectModal = props => {
     const name = file.name;
     const lastDot = name.lastIndexOf('.');
 
-    const fileName = name.substring(0, lastDot);
+    // const fileName = name.substring(0, lastDot);
     const ext = name.substring(lastDot + 1);
 
     return {

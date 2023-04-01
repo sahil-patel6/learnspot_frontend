@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   ModalBody,
@@ -11,11 +11,6 @@ import {
   ModalCloseButton,
   ModalContent,
   useToast,
-  Spacer,
-  Text,
-  ListItem,
-  List,
-  HStack,
   Center,
   Select,
   Flex,

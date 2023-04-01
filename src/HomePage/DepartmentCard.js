@@ -29,7 +29,7 @@ export const DepartmentCard = props => {
   const onDeleteDepartment = async () => {
     setIsLoading(true);
     try {
-      const result = await axios.delete(
+      await axios.delete(
         API.DELETE_DEPARTMENT(props.department._id, props.user._id),
         {
           headers: {

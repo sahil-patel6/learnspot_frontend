@@ -8,6 +8,7 @@ import SemestersPage from './Semesters/SemestersPage';
 import SubjectsPage from './Subjects/SubjectsPage';
 import TeachersPage from './Teachers/TeachersPage';
 import StudentPage from './Students/StudentsPage';
+import ParentPage from './Parents/ParentsPage';
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/teachers" element={<TeachersPage />} />
           <Route path="/students" element={<StudentPage />} />
-          <Route path="/parents" element={<TeachersPage />} />
+          <Route path="/parents" element={<ParentPage />} />
           <Route path="/department/:department_id/semesters" element={<SemestersPage />} />
           <Route path="/department/:department_id/semesters/:semester_id/subjects" element={<SubjectsPage />} />
           <Route path="*" element={<NoPage />} />
