@@ -30,54 +30,58 @@ function NavBar(props) {
             <Text>Learn Spot</Text>
           </HStack>
         </Link>
-        <Link to="/">
-          <Text
-            ml={5}
-            paddingX={3}
-            paddingY={1.5}
-            borderRadius={3}
-            _hover={{ bg: 'blue.500' }}
-            bg={props.location == null ? 'blue.500' : '#2F855A'}
-          >
-            Home
-          </Text>
-        </Link>
-        <Link to={`/teachers`}>
-          <Text
-            ml={5}
-            paddingX={3}
-            paddingY={1.5}
-            borderRadius={3}
-            _hover={{ bg: 'blue.500' }}
-            bg={props.location === 'Teachers' ? 'blue.500' : '#2F855A'}
-          >
-            Teacher
-          </Text>
-        </Link>
-        <Link to="/students">
-          <Text
-            ml={5}
-            paddingX={3}
-            paddingY={1.5}
-            borderRadius={3}
-            _hover={{ bg: 'blue.500' }}
-            bg={props.location === 'Students' ? 'blue.500' : '#2F855A'}
-          >
-            Students
-          </Text>
-        </Link>
-        <Link to="/parents">
-          <Text
-            ml={5}
-            paddingX={3}
-            paddingY={1.5}
-            borderRadius={3}
-            _hover={{ bg: 'blue.500' }}
-            bg={props.location === 'Parents' ? 'blue.500' : '#2F855A'}
-          >
-            Parents
-          </Text>
-        </Link>
+        {props.user != null && props.user._id != null ? (
+          <HStack>
+            <Link to="/">
+              <Text
+                ml={5}
+                paddingX={3}
+                paddingY={1.5}
+                borderRadius={3}
+                _hover={{ bg: 'blue.500' }}
+                bg={props.location == null ? 'blue.500' : '#2F855A'}
+              >
+                Home
+              </Text>
+            </Link>
+            <Link to={`/teachers`}>
+              <Text
+                ml={5}
+                paddingX={3}
+                paddingY={1.5}
+                borderRadius={3}
+                _hover={{ bg: 'blue.500' }}
+                bg={props.location === 'Teachers' ? 'blue.500' : '#2F855A'}
+              >
+                Teacher
+              </Text>
+            </Link>
+            <Link to="/students">
+              <Text
+                ml={5}
+                paddingX={3}
+                paddingY={1.5}
+                borderRadius={3}
+                _hover={{ bg: 'blue.500' }}
+                bg={props.location === 'Students' ? 'blue.500' : '#2F855A'}
+              >
+                Students
+              </Text>
+            </Link>
+            <Link to="/parents">
+              <Text
+                ml={5}
+                paddingX={3}
+                paddingY={1.5}
+                borderRadius={3}
+                _hover={{ bg: 'blue.500' }}
+                bg={props.location === 'Parents' ? 'blue.500' : '#2F855A'}
+              >
+                Parents
+              </Text>
+            </Link>
+          </HStack>
+        ) : null}
       </HStack>
       <Spacer />
       {props.user != null && props.user._id != null ? (
