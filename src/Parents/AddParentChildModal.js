@@ -31,6 +31,7 @@ export const AddParentChildModal = props => {
   };
 
   const getDepartments = async () => {
+    setSelectedStudent(null);
     try {
       setDepartments(null);
       setIsLoading(true);
@@ -46,7 +47,7 @@ export const AddParentChildModal = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response,
+        description: error.response.data.error,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -57,6 +58,7 @@ export const AddParentChildModal = props => {
   };
 
   const getStudents = async (semester) => {
+    setSelectedStudent(null);
     try {
       setStudents(null);
       // setIsLoading(true);
@@ -75,7 +77,7 @@ export const AddParentChildModal = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response,
+        description: error.response.data.error,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -109,6 +111,7 @@ export const AddParentChildModal = props => {
         isOpen={props.isOpen}
         onClose={() => {
           onCloseModal();
+          console.log(selectedDepartment,selectedStudent);
           props.onClose(selectedStudent);
         }}
       >

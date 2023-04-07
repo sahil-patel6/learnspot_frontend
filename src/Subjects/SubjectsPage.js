@@ -17,7 +17,7 @@ import React, { useEffect, useState } from 'react';
 import NavBar from '../Components/NavBar';
 import { API } from '../utils/API';
 
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { SubjectCard } from './SubjectCard';
 import { SubjectModal } from './SubjectModal';
 
@@ -32,6 +32,7 @@ const SubjectsPage = props => {
   const [isSubjectOpenModal, setIsSubjectOpenModal] = useState(false);
 
   const toast = useToast();
+  const navigate = useNavigate();
 
   const onOpenCreateSubjectModal = () => {
     setIsSubjectOpenModal(true);
@@ -86,7 +87,8 @@ const SubjectsPage = props => {
       setUser(temp);
       if (temp == null || temp._id == null || temp.token == null) {
         console.log('INSIDE YEAY');
-        window.location.href = '/signin';
+        navigate("/signin")
+        // window.location.href = '/signin';
       } else {
         getSubjects(temp);
       }
@@ -105,7 +107,7 @@ const SubjectsPage = props => {
   }, []);
 
   return (
-    <VStack align={'flex-start'} width={'100%'} height={isLoading || subjects === null || subjects.length === 0 ?  "100vh" : "full"}>
+    <VStack align={'flex-start'} width={'100%'} height={isLoading || subjects === null || subjects.subjects == null || subjects.subjects.length === 0 ?  "100vh" : "full"}>
       <NavBar user={user} />
       {isLoading ? (
         <Center width={'100%'} height={'100%'}>
@@ -125,13 +127,13 @@ const SubjectsPage = props => {
         >
           <HStack width={'100%'} align={'center'}>
             <Text fontSize={20} fontWeight={'bold'}>
-              All Subjects:
+              All Subjects {subjects != null && subjects.semester != null ? `(${subjects.semester.department.name}->${subjects.semester.name})` : "" }:
             </Text>
             <Spacer />
             <Button onClick={onOpenCreateSubjectModal}>Create Subject</Button>
           </HStack>
           <Box h={3}></Box>
-          {subjects === null || subjects.length === 0 ? (
+          {subjects === null || subjects.subjects == null || subjects.subjects.length === 0 ? (
             <Center width={'100%'} height={'100%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
@@ -141,8 +143,8 @@ const SubjectsPage = props => {
             </Center>
           ) : (
             <Wrap>
-              {subjects &&
-                subjects.map(subject => (
+              {subjects && subjects.subjects
+                && subjects.subjects.map(subject => (
                   <WrapItem key={subject._id}>
                     <SubjectCard
                       subject={subject}

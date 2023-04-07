@@ -63,13 +63,23 @@ const SemestersPage = props => {
         }
       );
       console.log(result.data);
+      if (result.data.semesters){
+        result.data.semesters.map((s)=>{
+          s.credits =0;
+          s.subjects.map((subject)=>{
+            s.credits += subject.credits;
+          })
+        })
+        console.log(result.data);
+      }
       setSemesters(result.data);
+
       setIsLoading(false);
     } catch (error) {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response,
+        description: error.response.data.error,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -106,7 +116,7 @@ const SemestersPage = props => {
   }, []);
 
   return (
-    <VStack align={'flex-start'} width={'100%'} height={isLoading || semesters ===null || semesters.length === 0 ?  "100vh" : "full"}>
+    <VStack align={'flex-start'} width={'100%'} height={isLoading || semesters === null || semesters.semesters == null || semesters.semesters.length === 0 ?  "100vh" : "full"}>
       <NavBar user={user} />
       {isLoading ? (
         <Center width={'100%'} height={'100%'}>
@@ -126,13 +136,13 @@ const SemestersPage = props => {
         >
           <HStack width={'100%'} align={'center'}>
             <Text fontSize={20} fontWeight={'bold'}>
-              All Semesters:
+              All Semesters {semesters != null && semesters.department != null ? `(${semesters.department.name})` : "" }:
             </Text>
             <Spacer />
             <Button onClick={onOpenCreateSemesterModal}>Create Semester</Button>
           </HStack>
           <Box h={3}></Box>
-          {semesters === null || semesters.length === 0 ? (
+          {semesters === null || semesters.semesters == null || semesters.semesters.length === 0 ? (
             <Center width={'100%'} height={'100%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
@@ -142,8 +152,8 @@ const SemestersPage = props => {
             </Center>
           ) : (
             <Wrap>
-              {semesters &&
-                semesters.map(semester => (
+              {semesters && semesters.semesters &&
+                semesters.semesters.map(semester => (
                   <WrapItem key={semester._id}>
                     <SemesterCard
                       semester={semester}

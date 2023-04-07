@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import NavBar from '../Components/NavBar';
 import { API } from '../utils/API';
 
@@ -29,6 +30,7 @@ const ParentPage = props => {
   const [isParentOpenModal, setIsParentOpenModal] = useState(false);
 
   const toast = useToast();
+  const navigate = useNavigate();
 
   const onOpenCreateParentModal = () => {
     setIsParentOpenModal(true);
@@ -80,7 +82,8 @@ const ParentPage = props => {
       setUser(temp);
       if (temp == null || temp._id == null || temp.token == null) {
         console.log('INSIDE YEAY');
-        window.location.href = '/signin';
+        navigate("/signin");
+        // window.location.href = '/signin';
       } else {
         getParents(temp);
       }

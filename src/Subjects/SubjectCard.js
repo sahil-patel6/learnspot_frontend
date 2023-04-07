@@ -11,14 +11,25 @@ import {
   Spacer,
   useToast,
   Image,
+  Center,
+  Avatar
 } from '@chakra-ui/react';
 import { API } from '../utils/API';
 import axios from 'axios';
+import { ConfirmationModal } from '../Components/ConfirmationModal';
 
 export const SubjectCard = props => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenConfirmationModal,setIsOpenConfirmationModal] = useState(false);
 
   const toast = useToast();
+
+  const onCloseConfirmationModal = (decision) => {
+    setIsOpenConfirmationModal(false);
+    if (decision){
+      onDeleteSubject()
+    }
+  }
 
   const onUpdateSubject = () => {
     props.onOpenUpdateSubjectModal(props.subject);
@@ -50,7 +61,7 @@ export const SubjectCard = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response,
+        description: error.response.data.error,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -65,11 +76,10 @@ export const SubjectCard = props => {
       <CardBody>
         <Image
           src={props.subject.pic_url}
-          alt="Green double couch with wooden legs"
           borderRadius="lg"
           height={225}
           width={'sm'}
-          align={"center"}
+          align={'center'}
           fit="cover"
         />
         <Stack mt="6" spacing="6">
@@ -82,6 +92,25 @@ export const SubjectCard = props => {
               {props.subject.credits}
             </Text>
           </Box>
+          {props.subject.teacher != null ? (
+            <Box>
+              <Heading size="xs" textTransform="uppercase">
+                Taught By:
+              </Heading>
+              <HStack mt={1}>
+                <Center mt={2}>
+                    <Avatar
+                      size="xs"
+                      name={props.subject.teacher.name}
+                      src={props.subject.teacher.profile_pic}
+                    />
+                </Center>
+                <Text pt="2" size="xs">
+                  {props.subject.teacher.name}
+                </Text>
+              </HStack>
+            </Box>
+          ) : null}
           <HStack>
             <Button colorScheme={'blue'} onClick={onUpdateSubject}>
               Update
@@ -89,11 +118,12 @@ export const SubjectCard = props => {
             <Spacer />
             <Button
               colorScheme={'red'}
-              onClick={onDeleteSubject}
+              onClick={()=>{setIsOpenConfirmationModal(true)}}
               isLoading={isLoading}
             >
               Delete
             </Button>
+            <ConfirmationModal isOpen={isOpenConfirmationModal} onClose={onCloseConfirmationModal}/>
           </HStack>
         </Stack>
       </CardBody>

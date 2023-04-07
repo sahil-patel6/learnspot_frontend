@@ -26,9 +26,13 @@ import { API } from '../utils/API';
 import axios from 'axios';
 import ErrorMessage from '../Components/ErrorMessage';
 import { AddTeacherSubjectModal } from './AddTeacherSubjectModal';
+import { ConfirmationModal } from '../Components/ConfirmationModal';
 
 export const TeacherModal = props => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenConfirmationModal,setIsOpenConfirmationModal] = useState(false);
+  const [confirmation,setConfirmation] = useState(false);
+
   const toast = useToast();
 
   const formikRef = useRef();
@@ -36,6 +40,14 @@ export const TeacherModal = props => {
   const onCloseModal = () => {
     setIsLoading(false);
   };
+
+  const onCloseConfirmationModal = (decision) => {
+    setIsOpenConfirmationModal(false);
+    if (decision){
+      setConfirmation(true);
+      formikRef.current.submitForm();
+    }
+  }
 
   const [isAddTeacherSubjectModelOpen, setIsAddTeacherSubjectModelOpen] =
     useState(false);
@@ -48,11 +60,16 @@ export const TeacherModal = props => {
     setIsAddTeacherSubjectModelOpen(false);
     if (subject) {
       console.log(subject);
-      formikRef.current.values.subjects.push(subject);
-      formikRef.current.setFieldValue(
-        'subjects',
-        formikRef.current.values.subjects
+      const s = formikRef.current.values.subjects.find(
+        s => s._id == subject._id
       );
+      if (!s) {
+        formikRef.current.values.subjects.push(subject);
+        formikRef.current.setFieldValue(
+          'subjects',
+          formikRef.current.values.subjects
+        );
+      }
     }
   };
 
@@ -115,6 +132,20 @@ export const TeacherModal = props => {
                   console.log(props.user._id);
                   let result = null;
                   if (props.activeTeacher == null) {
+                    if (values.plainPassword.length < 8){
+                      toast({
+                        title: "Password should contain atleast 8 characters",
+                        status: 'error',
+                        duration: '2000',
+                        isClosable: true,
+                        position: 'top-right',
+                      });
+                      return;
+                    }
+                    if (!confirmation){
+                      setIsOpenConfirmationModal(true);
+                      return;
+                    }
                     setIsLoading(true);
                     result = await axios.post(
                       API.CREATE_TEACHER(props.user._id),
@@ -122,7 +153,7 @@ export const TeacherModal = props => {
                         name: values.name,
                         email: values.email,
                         subjects: values.subjects.map(subject => subject._id),
-                        plainPassword: values.plainPassword
+                        plainPassword: values.plainPassword,
                       },
                       {
                         headers: {
@@ -145,6 +176,11 @@ export const TeacherModal = props => {
                       position: 'top-right',
                     });
                   } else {
+                    
+                    if (!confirmation){
+                      setIsOpenConfirmationModal(true);
+                      return;
+                    }
                     setIsLoading(true);
                     result = await axios.put(
                       API.UPDATE_TEACHER(
@@ -178,17 +214,20 @@ export const TeacherModal = props => {
                       position: 'top-right',
                     });
                   }
+                  setConfirmation(false);
                 } catch (error) {
                   console.log(error);
                   toast({
                     title: 'An error occurred',
-                    description: error.response,
+                    description: error.response.data.error,
                     status: 'error',
                     duration: '2000',
                     isClosable: true,
                     position: 'top-right',
                   });
                   setIsLoading(false);
+                  setConfirmation(false);
+                  console.log(confirmation,"Confirmation")
                 }
               }}
             >
@@ -283,6 +322,7 @@ export const TeacherModal = props => {
                     <Button
                       onClick={() => {
                         onCloseModal();
+                        setConfirmation(false);
                         props.onClose();
                       }}
                     >
@@ -297,6 +337,7 @@ export const TeacherModal = props => {
               onClose={onCloseAddTeacherSubjectModel}
               user={props.user}
             />
+            <ConfirmationModal isOpen={isOpenConfirmationModal} onClose={onCloseConfirmationModal} />
           </ModalBody>
         </ModalContent>
       </Modal>

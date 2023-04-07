@@ -26,15 +26,26 @@ import { API } from '../utils/API';
 import axios from 'axios';
 import ErrorMessage from '../Components/ErrorMessage';
 import { AddParentChildModal } from './AddParentChildModal';
+import { ConfirmationModal } from '../Components/ConfirmationModal';
 
 export const ParentModal = props => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
   const toast = useToast();
 
   const formikRef = useRef();
 
   const onCloseModal = () => {
     setIsLoading(false);
+  };
+
+  const onCloseConfirmationModal = decision => {
+    setIsOpenConfirmationModal(false);
+    if (decision) {
+      setConfirmation(true);
+      formikRef.current.submitForm();
+    }
   };
 
   const [isAddParentChildModelOpen, setIsAddParentChildModelOpen] =
@@ -48,11 +59,17 @@ export const ParentModal = props => {
     setIsAddParentChildModelOpen(false);
     if (student) {
       console.log(student);
-      formikRef.current.values.students.push(student);
-      formikRef.current.setFieldValue(
-        'students',
-        formikRef.current.values.students
+
+      const s = formikRef.current.values.students.find(
+        s => s._id == student._id
       );
+      if (!s) {
+        formikRef.current.values.students.push(student);
+        formikRef.current.setFieldValue(
+          'students',
+          formikRef.current.values.students
+        );
+      }
     }
   };
 
@@ -90,8 +107,7 @@ export const ParentModal = props => {
             <Formik
               innerRef={formikRef}
               initialValues={{
-                name:
-                  props.activeParent != null ? props.activeParent.name : '',
+                name: props.activeParent != null ? props.activeParent.name : '',
                 email:
                   props.activeParent != null ? props.activeParent.email : '',
                 students:
@@ -115,6 +131,21 @@ export const ParentModal = props => {
                   console.log(props.user._id);
                   let result = null;
                   if (props.activeParent == null) {
+                    if (values.plainPassword.length < 8) {
+                      toast({
+                        title: 'Password should contain atleast 8 characters',
+                        status: 'error',
+                        duration: '2000',
+                        isClosable: true,
+                        position: 'top-right',
+                      });
+                      return;
+                    }
+                    if (!confirmation) {
+                      setIsOpenConfirmationModal(true);
+                      return;
+                    }
+
                     setIsLoading(true);
                     result = await axios.post(
                       API.CREATE_PARENT(props.user._id),
@@ -122,7 +153,7 @@ export const ParentModal = props => {
                         name: values.name,
                         email: values.email,
                         students: values.students.map(student => student._id),
-                        plainPassword: values.plainPassword
+                        plainPassword: values.plainPassword,
                       },
                       {
                         headers: {
@@ -131,7 +162,7 @@ export const ParentModal = props => {
                       }
                     );
                     setIsLoading(true);
-                    console.log(result.data);
+                    console.log(result.data, "PARENT's CHILD");
                     setIsLoading(false);
                     onCloseModal();
                     props.onClose(result.data);
@@ -145,12 +176,14 @@ export const ParentModal = props => {
                       position: 'top-right',
                     });
                   } else {
+                    if (!confirmation) {
+                      setIsOpenConfirmationModal(true);
+                      return;
+                    }
+
                     setIsLoading(true);
                     result = await axios.put(
-                      API.UPDATE_PARENT(
-                        props.activeParent._id,
-                        props.user._id
-                      ),
+                      API.UPDATE_PARENT(props.activeParent._id, props.user._id),
                       {
                         name: values.name,
                         email: values.email,
@@ -178,16 +211,18 @@ export const ParentModal = props => {
                       position: 'top-right',
                     });
                   }
+                  setConfirmation(false);
                 } catch (error) {
                   console.log(error);
                   toast({
                     title: 'An error occurred',
-                    description: error.response,
+                    description: error.response.data.error,
                     status: 'error',
                     duration: '2000',
                     isClosable: true,
                     position: 'top-right',
                   });
+                  setConfirmation(false);
                   setIsLoading(false);
                 }
               }}
@@ -277,8 +312,7 @@ export const ParentModal = props => {
                       isLoading={isLoading}
                       type="submit"
                     >
-                      {props.activeParent == null ? 'Create' : 'Update'}{' '}
-                      Parent
+                      {props.activeParent == null ? 'Create' : 'Update'} Parent
                     </Button>
                     <Button
                       onClick={() => {
@@ -296,6 +330,10 @@ export const ParentModal = props => {
               isOpen={isAddParentChildModelOpen}
               onClose={onCloseAddParentChildModel}
               user={props.user}
+            />
+            <ConfirmationModal
+              isOpen={isOpenConfirmationModal}
+              onClose={onCloseConfirmationModal}
             />
           </ModalBody>
         </ModalContent>

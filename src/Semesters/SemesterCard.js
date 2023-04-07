@@ -16,11 +16,21 @@ import {
 import { API } from '../utils/API';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { ConfirmationModal } from '../Components/ConfirmationModal';
 
 export const SemesterCard = props => {
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isOpenConfirmationModal,setIsOpenConfirmationModal] = useState(false);
+
   const toast = useToast();
+
+  const onCloseConfirmationModal = (decision) => {
+    setIsOpenConfirmationModal(false);
+    if (decision){
+      onDeleteSemester()
+    }
+  }
 
   const onUpdateSemester = () => {
     props.onOpenUpdateSemesterModal(props.semester);
@@ -52,7 +62,7 @@ export const SemesterCard = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response,
+        description: error.response.data.error,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -80,6 +90,14 @@ export const SemesterCard = props => {
                 {props.semester.subjects.length}
               </Text>
             </Box>
+            <Box>
+              <Heading size="xs" textTransform="uppercase">
+                Total Credits
+              </Heading>
+              <Text pt="2" fontSize="sm">
+                {props.semester.credits}
+              </Text>
+            </Box>
           </Stack>
         </Link>
         <HStack marginTop={5}>
@@ -89,11 +107,12 @@ export const SemesterCard = props => {
           <Spacer />
           <Button
             colorScheme={'red'}
-            onClick={onDeleteSemester}
+            onClick={()=>{setIsOpenConfirmationModal(true)}}
             isLoading={isLoading}
           >
             Delete
           </Button>
+          <ConfirmationModal isOpen={isOpenConfirmationModal} onClose={onCloseConfirmationModal}/>
         </HStack>
       </CardBody>
     </Card>

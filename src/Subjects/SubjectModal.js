@@ -27,12 +27,25 @@ import {
   ref,
   uploadBytes,
 } from 'firebase/storage';
+import { ConfirmationModal } from '../Components/ConfirmationModal';
 
 export const SubjectModal = props => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const inputFile = useRef(null);
   const [pickedSubjectImage, setPickedSubjectImage] = useState(null);
+  const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
+
+  const formikRef = useRef();
+
+  const onCloseConfirmationModal = decision => {
+    setIsOpenConfirmationModal(false);
+    if (decision) {
+      setConfirmation(true);
+      formikRef.current.submitForm();
+    }
+  };
 
   const pick_image = () => {
     inputFile.current.click();
@@ -79,13 +92,18 @@ export const SubjectModal = props => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{props.activeSubject == null ? "Create" : "Update"} Subject Form</ModalHeader>
+          <ModalHeader>
+            {props.activeSubject == null ? 'Create' : 'Update'} Subject Form
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <Formik
+              innerRef={formikRef}
               initialValues={{
-                name: props.activeSubject != null ? props.activeSubject.name : '',
-                credits: props.activeSubject != null ? props.activeSubject.credits : 2,
+                name:
+                  props.activeSubject != null ? props.activeSubject.name : '',
+                credits:
+                  props.activeSubject != null ? props.activeSubject.credits : 2,
               }}
               validateOnChange={false}
               validateOnBlur={false}
@@ -110,6 +128,11 @@ export const SubjectModal = props => {
                         position: 'top-right',
                       });
                     }
+
+                    if (!confirmation) {
+                      setIsOpenConfirmationModal(true);
+                      return;
+                    }
                     setIsLoading(true);
                     var file_info = getFileNameWithExt(pickedSubjectImage);
                     console.log(pickedSubjectImage);
@@ -121,8 +144,8 @@ export const SubjectModal = props => {
                       firebase_storage,
                       subject_image_fcs_path
                     );
-                    uploadBytes(subject_pic_ref, pickedSubjectImage).then(
-                      async snapshot => {
+                    uploadBytes(subject_pic_ref, pickedSubjectImage)
+                      .then(async snapshot => {
                         const download_url = await getDownloadURL(snapshot.ref);
                         result = await axios.post(
                           API.CREATE_SUBJECT(props.user._id),
@@ -139,22 +162,41 @@ export const SubjectModal = props => {
                             },
                           }
                         );
-
                         setIsLoading(true);
                         console.log(result.data);
                         setIsLoading(false);
                         onCloseModal();
                         props.onClose(result.data);
                         toast({
-                          title: `${props.activeSubject == null ? "Created" : "Updated"} Subject Successfully`,
+                          title: `${
+                            props.activeSubject == null ? 'Created' : 'Updated'
+                          } Subject Successfully`,
                           status: 'success',
                           duration: '2000',
                           isClosable: true,
                           position: 'top-right',
                         });
-                      }
-                    );
+                        setConfirmation(false);
+                      })
+                      .catch(error => {
+                        console.log(error, 'SUBJECT ERROR');
+                        toast({
+                          title: 'An error occurred',
+                          description: error.response.data.error,
+                          status: 'error',
+                          duration: '2000',
+                          isClosable: true,
+                          position: 'top-right',
+                        });
+                        setConfirmation(false);
+                        setIsLoading(false);
+                      });
+                    setConfirmation(false);
                   } else {
+                    if (!confirmation) {
+                      setIsOpenConfirmationModal(true);
+                      return;
+                    }
                     setIsLoading(true);
                     if (pickedSubjectImage) {
                       await deleteObject(
@@ -174,12 +216,17 @@ export const SubjectModal = props => {
                         subject_pic_ref,
                         pickedSubjectImage
                       );
-                      const download_url = await getDownloadURL(uploadSnapshot.ref);
+                      const download_url = await getDownloadURL(
+                        uploadSnapshot.ref
+                      );
                       props.activeSubject.pic_url = download_url;
                       props.activeSubject.fcs_pic_path = subject_image_fcs_path;
                     }
                     result = await axios.put(
-                      API.UPDATE_SUBJECT(props.activeSubject._id, props.user._id),
+                      API.UPDATE_SUBJECT(
+                        props.activeSubject._id,
+                        props.user._id
+                      ),
                       {
                         name: values.name,
                         credits: values.credits,
@@ -199,23 +246,28 @@ export const SubjectModal = props => {
                     onCloseModal();
                     props.onClose(result.data);
                     toast({
-                      title: `${props.activeSubject == null ? "Created" : "Updated"} Subject Successfully`,
+                      title: `${
+                        props.activeSubject == null ? 'Created' : 'Updated'
+                      } Subject Successfully`,
                       status: 'success',
                       duration: '2000',
                       isClosable: true,
                       position: 'top-right',
                     });
+                    setConfirmation(false);
                   }
+                  setConfirmation(false);
                 } catch (error) {
-                  console.log(error);
+                  console.log(error, 'SUBJECT ERROR');
                   toast({
                     title: 'An error occurred',
-                    description: error.response,
+                    description: error.response.data.error,
                     status: 'error',
                     duration: '2000',
                     isClosable: true,
                     position: 'top-right',
                   });
+                  setConfirmation(false);
                   setIsLoading(false);
                 }
               }}
@@ -287,7 +339,8 @@ export const SubjectModal = props => {
                       isLoading={isLoading}
                       type="submit"
                     >
-                      {props.activeSubject == null ? "Create" : "Update"} Subject
+                      {props.activeSubject == null ? 'Create' : 'Update'}{' '}
+                      Subject
                     </Button>
                     <Button
                       onClick={() => {
@@ -298,6 +351,10 @@ export const SubjectModal = props => {
                       Cancel
                     </Button>
                   </ModalFooter>
+                  <ConfirmationModal
+                    isOpen={isOpenConfirmationModal}
+                    onClose={onCloseConfirmationModal}
+                  />
                 </form>
               )}
             </Formik>

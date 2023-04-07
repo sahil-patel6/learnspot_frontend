@@ -19,11 +19,20 @@ import {
 } from '@chakra-ui/react';
 import { API } from '../utils/API';
 import axios from 'axios';
+import { ConfirmationModal } from '../Components/ConfirmationModal';
 
 export const ParentCard = props => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenConfirmationModal,setIsOpenConfirmationModal] = useState(false);
 
   const toast = useToast();
+
+  const onCloseConfirmationModal = (decision) => {
+    setIsOpenConfirmationModal(false);
+    if (decision){
+      onDeleteParent()
+    }
+  }
 
   const onUpdateParent = () => {
     props.onOpenUpdateParentModal(props.parent);
@@ -55,7 +64,7 @@ export const ParentCard = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response,
+        description: error.response.data.error,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -115,11 +124,13 @@ export const ParentCard = props => {
             <Spacer />
             <Button
               colorScheme={'red'}
-              onClick={onDeleteParent}
+              onClick={()=>{setIsOpenConfirmationModal(true)}}
               isLoading={isLoading}
             >
               Delete
             </Button>
+            <ConfirmationModal isOpen={isOpenConfirmationModal} onClose={onCloseConfirmationModal}/>
+
           </HStack>
         </Stack>
       </CardBody>

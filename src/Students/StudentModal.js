@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Modal,
   ModalBody,
@@ -22,15 +22,29 @@ import * as Yup from 'yup';
 import { API } from '../utils/API';
 import axios from 'axios';
 import ErrorMessage from '../Components/ErrorMessage';
+import { ConfirmationModal } from '../Components/ConfirmationModal';
 
 export const StudentModal = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [departments, setDepartments] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState(null);
+
+  const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
+
   const toast = useToast();
+  const formikRef = useRef();
 
   const onCloseModal = () => {
     setIsLoading(false);
+  };
+
+  const onCloseConfirmationModal = decision => {
+    setIsOpenConfirmationModal(false);
+    if (decision) {
+      setConfirmation(true);
+      formikRef.current.submitForm();
+    }
   };
 
   const [selectedDepartment, setSelectedDepartment] = useState(null);
@@ -52,7 +66,7 @@ export const StudentModal = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response,
+        description: error.response.data.error,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -115,6 +129,7 @@ export const StudentModal = props => {
               </Center>
             ) : (
               <Formik
+                innerRef={formikRef}
                 initialValues={{
                   name:
                     props.activeStudent != null ? props.activeStudent.name : '',
@@ -152,6 +167,20 @@ export const StudentModal = props => {
                     console.log(props.user._id);
                     let result = null;
                     if (props.activeStudent == null) {
+                      if (values.plainPassword.length < 8){
+                        toast({
+                          title: "Password should contain atleast 8 characters",
+                          status: 'error',
+                          duration: '2000',
+                          isClosable: true,
+                          position: 'top-right',
+                        });
+                        return;
+                      }
+                      if (!confirmation){
+                        setIsOpenConfirmationModal(true);
+                        return;
+                      }  
                       setIsLoading(true);
                       console.log(
                         'HELLO BOYSSSS',
@@ -188,6 +217,11 @@ export const StudentModal = props => {
                         position: 'top-right',
                       });
                     } else {
+                    
+                      if (!confirmation){
+                        setIsOpenConfirmationModal(true);
+                        return;
+                      }
                       setIsLoading(true);
                       result = await axios.put(
                         API.UPDATE_STUDENT(
@@ -222,17 +256,19 @@ export const StudentModal = props => {
                         position: 'top-right',
                       });
                     }
+                    setConfirmation(false);
                   } catch (error) {
                     console.log(error);
                     toast({
                       title: 'An error occurred',
-                      description: error.response,
+                      description: error.response.data.error,
                       status: 'error',
                       duration: '2000',
                       isClosable: true,
                       position: 'top-right',
                     });
                     setIsLoading(false);
+                    setConfirmation(false);
                   }
                 }}
               >
@@ -339,6 +375,10 @@ export const StudentModal = props => {
                         Cancel
                       </Button>
                     </ModalFooter>
+                    <ConfirmationModal
+                      isOpen={isOpenConfirmationModal}
+                      onClose={onCloseConfirmationModal}
+                    />
                   </form>
                 )}
               </Formik>
