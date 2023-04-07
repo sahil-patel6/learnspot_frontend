@@ -27,6 +27,7 @@ import { StudentModal } from './StudentModal';
 const StudentPage = props => {
   const [user, setUser] = useState(null);
   const [students, setStudents] = useState(null);
+  const [originalStudents, setOriginalStudents] = useState(null);
   const [activeStudent, setActiveStudent] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,6 +54,7 @@ const StudentPage = props => {
 
   const getStudents = async user => {
     try {
+      setOriginalStudents(null);
       setStudents(null);
       setActiveStudent(null);
       setIsLoading(true);
@@ -63,6 +65,7 @@ const StudentPage = props => {
       });
       console.log(result.data);
       setStudents(result.data);
+      setOriginalStudents(result.data);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -77,6 +80,22 @@ const StudentPage = props => {
       setIsLoading(false);
     }
   };
+
+  const searchStudents = (value)=>{
+    console.log(value)
+    if (value==""){
+      setStudents(originalStudents);
+    }else{
+      let searchedStudents = [];
+      originalStudents.map((s)=>{
+        if (s.name.toLowerCase().includes(value.toLowerCase())){
+          searchedStudents.push(s);
+        }
+      })
+      setStudents(searchedStudents);
+    }
+  }
+
 
   useEffect(() => {
     try {
@@ -132,7 +151,7 @@ const StudentPage = props => {
                 pointerEvents="none"
                 children={<Search2Icon color="gray.300" />}
               />
-              <Input type="text" placeholder="Search Students" />
+              <Input type="text" placeholder="Search Students" onChange={(e)=>searchStudents(e.target.value)}/>
             </InputGroup>
             <Button onClick={onOpenCreateStudentModal}>Create Student</Button>
           </Wrap>

@@ -26,7 +26,9 @@ import { ParentModal } from './ParentModal';
 
 const ParentPage = props => {
   const [user, setUser] = useState(null);
-  const [parents, setParents] = useState(null);
+  const [parents, setParents] = useState(null);  
+  const [originalParents, setOriginalParents] = useState(null);
+
   const [activeParent, setActiveParent] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,6 +56,7 @@ const ParentPage = props => {
   const getParents = async user => {
     try {
       setParents(null);
+      setOriginalParents(null);
       setActiveParent(null);
       setIsLoading(true);
       const result = await axios.get(API.GET_ALL_PARENTS(user._id), {
@@ -63,6 +66,7 @@ const ParentPage = props => {
       });
       console.log(result.data);
       setParents(result.data);
+      setOriginalParents(result.data);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -77,6 +81,21 @@ const ParentPage = props => {
       setIsLoading(false);
     }
   };
+
+  const searchParents = (value)=>{
+    console.log(value)
+    if (value==""){
+      setParents(originalParents);
+    }else{
+      let searchedParents = [];
+      originalParents.map((p)=>{
+        if (p.name.toLowerCase().includes(value.toLowerCase())){
+          searchedParents.push(p);
+        }
+      })
+      setParents(searchedParents);
+    }
+  }
 
   useEffect(() => {
     try {
@@ -132,7 +151,7 @@ const ParentPage = props => {
                 pointerEvents="none"
                 children={<Search2Icon color="gray.300" />}
               />
-              <Input type="text" placeholder="Search Parents" />
+              <Input type="text" placeholder="Search Parents" onChange={(e)=>searchParents(e.target.value)}/>
             </InputGroup>
             <Button onClick={onOpenCreateParentModal}>Create Parent</Button>
           </Wrap>

@@ -27,6 +27,7 @@ import { TeacherModal } from './TeacherModal';
 const TeachersPage = props => {
   const [user, setUser] = useState(null);
   const [teachers, setTeachers] = useState(null);
+  const [originalTeachers, setOriginalTeachers] = useState(null);
   const [activeTeacher, setActiveTeacher] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -51,9 +52,26 @@ const TeachersPage = props => {
     setActiveTeacher(teacher);
   };
 
+  const searchTeachers = (value)=>{
+    console.log(value)
+    if (value==""){
+      setTeachers(originalTeachers);
+    }else{
+      let searchedTeachers = [];
+      originalTeachers.map((t)=>{
+        if (t.name.toLowerCase().includes(value.toLowerCase())){
+          searchedTeachers.push(t);
+        }
+      })
+      setTeachers(searchedTeachers);
+    }
+  }
+
+
   const getTeachers = async user => {
     try {
       setTeachers(null);
+      setOriginalTeachers(null);
       setActiveTeacher(null);
       setIsLoading(true);
       const result = await axios.get(API.GET_ALL_TEACHERS(user._id), {
@@ -63,6 +81,7 @@ const TeachersPage = props => {
       });
       console.log(result.data);
       setTeachers(result.data);
+      setOriginalTeachers(result.data);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -132,7 +151,7 @@ const TeachersPage = props => {
                 pointerEvents="none"
                 children={<Search2Icon color="gray.300" />}
               />
-              <Input type="text" placeholder="Search Teachers" />
+              <Input type="text" placeholder="Search Teachers" onChange={(e)=>searchTeachers(e.target.value)} />
             </InputGroup>
 
             <Button onClick={onOpenCreateTeacherModal}>Create Teacher</Button>
