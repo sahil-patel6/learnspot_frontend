@@ -82,6 +82,7 @@ export const AddTeacherSubjectModal = props => {
           onCloseModal();
           props.onClose(selectedSubject);
         }}
+        isCentered
       >
         <ModalOverlay />
         <ModalContent>

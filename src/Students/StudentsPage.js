@@ -1,3 +1,4 @@
+import { Search2Icon } from '@chakra-ui/icons';
 import {
   useToast,
   VStack,
@@ -6,11 +7,13 @@ import {
   CircularProgress,
   Text,
   Box,
-  HStack,
   Spacer,
   Button,
   Wrap,
   WrapItem,
+  Input,
+  InputGroup,
+  InputLeftElement,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -19,7 +22,7 @@ import NavBar from '../Components/NavBar';
 import { API } from '../utils/API';
 
 import { StudentCard } from './StudentCard';
-import {StudentModal } from './StudentModal';
+import { StudentModal } from './StudentModal';
 
 const StudentPage = props => {
   const [user, setUser] = useState(null);
@@ -82,7 +85,7 @@ const StudentPage = props => {
       setUser(temp);
       if (temp == null || temp._id == null || temp.token == null) {
         console.log('INSIDE YEAY');
-        navigate("/signin");
+        navigate('/signin');
         // window.location.href = '/signin';
       } else {
         getStudents(temp);
@@ -102,40 +105,40 @@ const StudentPage = props => {
   }, []);
 
   return (
-    <VStack
-      align={'flex-start'}
-      width={'100%'}
-      height={
-        isLoading || students === null || students.length === 0 ? '100vh' : 'full'
-      }
-    >
-      <NavBar user={user} location={"Students"}/>
+    <VStack align={'flex-start'} width={'100%'} height={'100vh'}>
+      <NavBar user={user} location={'Students'} />
       {isLoading ? (
-        <Center width={'100%'} height={'100%'}>
+        <Center width={'100%'} height={'full'}>
           <Flex>
             <CircularProgress isIndeterminate color="green.300" />
           </Flex>
         </Center>
       ) : (
         <VStack
-          paddingStart={10}
+          paddingStart={8}
           paddingTop={5}
-          paddingRight={10}
+          paddingRight={8}
           align={'flex-start'}
-          height={'100%'}
+          height={students === null || students.length === 0 ? 'full' : 'max'}
           width={'100%'}
-          paddingBottom={10}
         >
-          <HStack width={'100%'} align={'center'}>
+          <Wrap width={'100%'}>
             <Text fontSize={20} fontWeight={'bold'}>
               All Students:
             </Text>
             <Spacer />
+            <InputGroup w={'xs'}>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<Search2Icon color="gray.300" />}
+              />
+              <Input type="text" placeholder="Search Students" />
+            </InputGroup>
             <Button onClick={onOpenCreateStudentModal}>Create Student</Button>
-          </HStack>
+          </Wrap>
           <Box h={3}></Box>
           {students === null || students.length === 0 ? (
-            <Center width={'100%'} height={'100%'}>
+            <Center width={'100%'} height={'55%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
                   No Students Found

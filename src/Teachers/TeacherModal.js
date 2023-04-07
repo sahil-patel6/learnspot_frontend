@@ -96,6 +96,7 @@ export const TeacherModal = props => {
           onCloseModal();
           props.onClose();
         }}
+        isCentered
       >
         <ModalOverlay />
         <ModalContent>

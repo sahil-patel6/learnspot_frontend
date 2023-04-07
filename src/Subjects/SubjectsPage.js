@@ -87,7 +87,7 @@ const SubjectsPage = props => {
       setUser(temp);
       if (temp == null || temp._id == null || temp.token == null) {
         console.log('INSIDE YEAY');
-        navigate("/signin")
+        navigate('/signin');
         // window.location.href = '/signin';
       } else {
         getSubjects(temp);
@@ -107,34 +107,41 @@ const SubjectsPage = props => {
   }, []);
 
   return (
-    <VStack align={'flex-start'} width={'100%'} height={isLoading || subjects === null || subjects.subjects == null || subjects.subjects.length === 0 ?  "100vh" : "full"}>
+    <VStack align={'flex-start'} width={'100%'} height={'100vh'}>
       <NavBar user={user} />
       {isLoading ? (
-        <Center width={'100%'} height={'100%'}>
+        <Center width={'100%'} height={'full'}>
           <Flex>
             <CircularProgress isIndeterminate color="green.300" />
           </Flex>
         </Center>
       ) : (
         <VStack
-          paddingStart={10}
+          paddingStart={8}
           paddingTop={5}
-          paddingRight={10}
+          paddingRight={8}
           align={'flex-start'}
-          height={'100%'}
+          height={subjects === null ||
+            subjects.subjects == null ||
+            subjects.subjects.length === 0 ? "full":'max'}
           width={'100%'}
-          paddingBottom={10}
         >
-          <HStack width={'100%'} align={'center'}>
-            <Text fontSize={20} fontWeight={'bold'}>
-              All Subjects {subjects != null && subjects.semester != null ? `(${subjects.semester.department.name}->${subjects.semester.name})` : "" }:
-            </Text>
+          <Wrap width={'full'}>
+              <Text fontSize={20} fontWeight={'bold'}>
+                All Subjects{' '}
+                {subjects != null && subjects.semester != null
+                  ? `(${subjects.semester.department.name}->${subjects.semester.name})`
+                  : ''}
+                :
+              </Text>
             <Spacer />
-            <Button onClick={onOpenCreateSubjectModal}>Create Subject</Button>
-          </HStack>
+              <Button onClick={onOpenCreateSubjectModal}>Create Subject</Button>
+          </Wrap>
           <Box h={3}></Box>
-          {subjects === null || subjects.subjects == null || subjects.subjects.length === 0 ? (
-            <Center width={'100%'} height={'100%'}>
+          {subjects === null ||
+          subjects.subjects == null ||
+          subjects.subjects.length === 0 ? (
+            <Center width={'100%'} height={'70%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
                   No Subjects Found
@@ -143,8 +150,9 @@ const SubjectsPage = props => {
             </Center>
           ) : (
             <Wrap>
-              {subjects && subjects.subjects
-                && subjects.subjects.map(subject => (
+              {subjects &&
+                subjects.subjects &&
+                subjects.subjects.map(subject => (
                   <WrapItem key={subject._id}>
                     <SubjectCard
                       subject={subject}

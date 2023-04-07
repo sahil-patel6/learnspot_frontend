@@ -72,7 +72,7 @@ export const SubjectCard = props => {
   };
 
   return (
-    <Card bg={'blackAlpha.100'} minW={'sm'} mb={5}>
+    <Card bg={'blackAlpha.100'} minW={'xs'} mb={5}>
       <CardBody>
         <Image
           src={props.subject.pic_url}

@@ -7,10 +7,10 @@ import {
   Button,
   ModalOverlay,
   ModalHeader,
-  ModalFooter,
   ModalCloseButton,
   ModalContent,
   useToast,
+  HStack,
 } from '@chakra-ui/react';
 
 import { Formik } from 'formik';
@@ -38,7 +38,11 @@ export const DepartmentModal = props => {
 
   return (
     <>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+      <Modal
+        isOpen={props.isOpen}
+        onClose={props.onClose}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -179,8 +183,7 @@ export const DepartmentModal = props => {
                     type="number"
                     {...formik.getFieldProps('total_years')}
                   />
-
-                  <ModalFooter>
+                  <HStack mt={5}>
                     <Button
                       colorScheme="green"
                       mr={3}
@@ -191,7 +194,7 @@ export const DepartmentModal = props => {
                       Department
                     </Button>
                     <Button onClick={() => props.onClose()}>Cancel</Button>
-                  </ModalFooter>
+                  </HStack>
                   <ConfirmationModal
                     isOpen={isOpenConfirmationModal}
                     onClose={onCloseConfirmationModal}

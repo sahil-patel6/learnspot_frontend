@@ -63,13 +63,13 @@ const SemestersPage = props => {
         }
       );
       console.log(result.data);
-      if (result.data.semesters){
-        result.data.semesters.map((s)=>{
-          s.credits =0;
-          s.subjects.map((subject)=>{
+      if (result.data.semesters) {
+        result.data.semesters.map(s => {
+          s.credits = 0;
+          s.subjects.map(subject => {
             s.credits += subject.credits;
-          })
-        })
+          });
+        });
         console.log(result.data);
       }
       setSemesters(result.data);
@@ -116,34 +116,47 @@ const SemestersPage = props => {
   }, []);
 
   return (
-    <VStack align={'flex-start'} width={'100%'} height={isLoading || semesters === null || semesters.semesters == null || semesters.semesters.length === 0 ?  "100vh" : "full"}>
+    <VStack align={'flex-start'} width={'100%'} height={'100vh'}>
       <NavBar user={user} />
       {isLoading ? (
-        <Center width={'100%'} height={'100%'}>
+        <Center width={'100%'} height={'full'}>
           <Flex>
             <CircularProgress isIndeterminate color="green.300" />
           </Flex>
         </Center>
       ) : (
         <VStack
-          paddingStart={10}
+          paddingStart={8}
           paddingTop={5}
-          paddingRight={10}
+          paddingRight={8}
           align={'flex-start'}
-          height={'100%'}
+          height={
+            semesters === null ||
+            semesters.semesters == null ||
+            semesters.semesters.length === 0
+              ? 'full'
+              : 'max'
+          }
           width={'100%'}
-          paddingBottom={10}
         >
-          <HStack width={'100%'} align={'center'}>
-            <Text fontSize={20} fontWeight={'bold'}>
-              All Semesters {semesters != null && semesters.department != null ? `(${semesters.department.name})` : "" }:
-            </Text>
+          <Wrap width={'full'}>
+              <Text fontSize={20} fontWeight={'bold'}>
+                All Semesters{' '}
+                {semesters != null && semesters.department != null
+                  ? `(${semesters.department.name})`
+                  : ''}
+                :
+              </Text>
             <Spacer />
-            <Button onClick={onOpenCreateSemesterModal}>Create Semester</Button>
-          </HStack>
+              <Button onClick={onOpenCreateSemesterModal}>
+                Create Semester
+              </Button>
+          </Wrap>
           <Box h={3}></Box>
-          {semesters === null || semesters.semesters == null || semesters.semesters.length === 0 ? (
-            <Center width={'100%'} height={'100%'}>
+          {semesters === null ||
+          semesters.semesters == null ||
+          semesters.semesters.length === 0 ? (
+            <Center width={'100%'} height={'70%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
                   No Semesters Found
@@ -152,7 +165,8 @@ const SemestersPage = props => {
             </Center>
           ) : (
             <Wrap>
-              {semesters && semesters.semesters &&
+              {semesters &&
+                semesters.semesters &&
                 semesters.semesters.map(semester => (
                   <WrapItem key={semester._id}>
                     <SemesterCard

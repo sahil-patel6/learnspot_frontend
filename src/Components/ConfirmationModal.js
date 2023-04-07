@@ -18,6 +18,9 @@ export const ConfirmationModal = props => {
         onClose={() => {
           props.onClose(false);
         }}
+        isCentered
+        size={'xs'}
+        
       >
         <ModalOverlay />
         <ModalContent>

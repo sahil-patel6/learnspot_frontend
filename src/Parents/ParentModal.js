@@ -96,6 +96,7 @@ export const ParentModal = props => {
           onCloseModal();
           props.onClose();
         }}
+        isCentered
       >
         <ModalOverlay />
         <ModalContent>

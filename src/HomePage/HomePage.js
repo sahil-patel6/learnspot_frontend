@@ -6,7 +6,6 @@ import {
   CircularProgress,
   Text,
   Box,
-  HStack,
   Spacer,
   Button,
   Wrap,
@@ -102,36 +101,35 @@ const HomePage = () => {
   }, []);
 
   return (
-    <VStack align={'flex-start'}  width={'100%'} height={isLoading || departments ===null || departments.length === 0 ?  "100vh" : "full"}>
-      <NavBar user={user}/>
+    <VStack align={'flex-start'} width={'100%'} height={'100vh'}>
+      <NavBar user={user} />
       {isLoading ? (
-        <Center width={'100%'} height={'100%'}>
+        <Center width={'100%'} height={'full'}>
           <Flex>
             <CircularProgress isIndeterminate color="green.300" />
           </Flex>
         </Center>
       ) : (
         <VStack
-          paddingStart={10}
+          paddingStart={8}
           paddingTop={5}
-          paddingRight={10}
+          paddingRight={8}
           align={'flex-start'}
-          height={'100%'}
+          height={departments === null || departments.length === 0 ? "full": "max"}
           width={'100%'}
-          paddingBottom={10}
         >
-          <HStack width={'100%'} align={'center'}>
-            <Text fontSize={20} fontWeight={'bold'}>
-              All DEPARTMENTS:
-            </Text>
+          <Wrap width={'full'}>
+              <Text fontSize={20} fontWeight={'bold'}>
+                All Departments:
+              </Text>
             <Spacer />
-            <Button onClick={onOpenCreateDepartmentModal}>
-              Create Department
-            </Button>
-          </HStack>
+              <Button onClick={onOpenCreateDepartmentModal}>
+                Create Department
+              </Button>
+          </Wrap>
           <Box h={3}></Box>
           {departments === null || departments.length === 0 ? (
-            <Center width={'100%'} height={'100%'}>
+            <Center  width={'100%'} height={'70%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
                   No Departments Found

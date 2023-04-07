@@ -1,3 +1,4 @@
+import { Search2Icon } from '@chakra-ui/icons';
 import {
   useToast,
   VStack,
@@ -6,11 +7,13 @@ import {
   CircularProgress,
   Text,
   Box,
-  HStack,
   Spacer,
   Button,
   Wrap,
   WrapItem,
+  InputLeftElement,
+  InputGroup,
+  Input,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -19,7 +22,7 @@ import NavBar from '../Components/NavBar';
 import { API } from '../utils/API';
 
 import { TeacherCard } from './TeacherCard';
-import {TeacherModal } from './TeacherModal';
+import { TeacherModal } from './TeacherModal';
 
 const TeachersPage = props => {
   const [user, setUser] = useState(null);
@@ -30,7 +33,7 @@ const TeachersPage = props => {
   const [isTeacherOpenModal, setIsTeacherOpenModal] = useState(false);
 
   const toast = useToast();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onOpenCreateTeacherModal = () => {
     setIsTeacherOpenModal(true);
@@ -82,7 +85,7 @@ const TeachersPage = props => {
       setUser(temp);
       if (temp == null || temp._id == null || temp.token == null) {
         console.log('INSIDE YEAY');
-        navigate("/signin")
+        navigate('/signin');
         // window.location.href = '/signin';
       } else {
         getTeachers(temp);
@@ -102,40 +105,41 @@ const TeachersPage = props => {
   }, []);
 
   return (
-    <VStack
-      align={'flex-start'}
-      width={'100%'}
-      height={
-        isLoading || teachers === null || teachers.length === 0 ? '100vh' : 'full'
-      }
-    >
-      <NavBar user={user} location={"Teachers"}/>
+    <VStack align={'flex-start'} width={'100%'} height={'100vh'}>
+      <NavBar user={user} location={'Teachers'} />
       {isLoading ? (
-        <Center width={'100%'} height={'100%'}>
+        <Center width={'100%'} height={'full'}>
           <Flex>
             <CircularProgress isIndeterminate color="green.300" />
           </Flex>
         </Center>
       ) : (
         <VStack
-          paddingStart={10}
+          paddingStart={8}
           paddingTop={5}
-          paddingRight={10}
+          paddingRight={8}
           align={'flex-start'}
-          height={'100%'}
+          height={teachers === null || teachers.length === 0 ? 'full' : 'max'}
           width={'100%'}
-          paddingBottom={10}
         >
-          <HStack width={'100%'} align={'center'}>
-            <Text fontSize={20} fontWeight={'bold'}>
-              All Teachers:
-            </Text>
+          <Wrap width={'100%'}>
+              <Text fontSize={20} fontWeight={'bold'}>
+                All Teachers:
+              </Text>
             <Spacer />
+            <InputGroup w={'xs'}>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<Search2Icon color="gray.300" />}
+              />
+              <Input type="text" placeholder="Search Teachers" />
+            </InputGroup>
+
             <Button onClick={onOpenCreateTeacherModal}>Create Teacher</Button>
-          </HStack>
+          </Wrap>
           <Box h={3}></Box>
           {teachers === null || teachers.length === 0 ? (
-            <Center width={'100%'} height={'100%'}>
+            <Center width={'100%'} height={'55%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
                   No Teachers Found

@@ -114,6 +114,7 @@ export const AddParentChildModal = props => {
           console.log(selectedDepartment,selectedStudent);
           props.onClose(selectedStudent);
         }}
+        isCentered
       >
         <ModalOverlay />
         <ModalContent>

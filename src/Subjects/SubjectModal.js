@@ -89,6 +89,7 @@ export const SubjectModal = props => {
           onCloseModal();
           props.onClose();
         }}
+        isCentered
       >
         <ModalOverlay />
         <ModalContent>
@@ -285,8 +286,8 @@ export const SubjectModal = props => {
                     <Image
                       src={URL.createObjectURL(pickedSubjectImage)}
                       borderRadius="lg"
-                      height={225}
-                      width={'sm'}
+                      // height={225}
+                      w={'100%'}
                       align={'center'}
                       marginBottom={5}
                       fit="cover"
@@ -296,8 +297,8 @@ export const SubjectModal = props => {
                     <Image
                       src={props.activeSubject.pic_url}
                       borderRadius="lg"
-                      height={225}
-                      width={'sm'}
+                      // height={225}
+                      w={'100%'}
                       align={'center'}
                       marginBottom={5}
                       fit="cover"
@@ -306,7 +307,7 @@ export const SubjectModal = props => {
                   ) : (
                     <Box
                       h={225}
-                      w={'sm'}
+                      w={'100%'}
                       border={'1px black solid'}
                       borderRadius="lg"
                       alignContent={'center'}

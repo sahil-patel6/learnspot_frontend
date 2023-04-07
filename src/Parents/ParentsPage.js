@@ -1,3 +1,4 @@
+import { Search2Icon } from '@chakra-ui/icons';
 import {
   useToast,
   VStack,
@@ -6,11 +7,13 @@ import {
   CircularProgress,
   Text,
   Box,
-  HStack,
   Spacer,
   Button,
   Wrap,
   WrapItem,
+  InputGroup,
+  InputLeftElement,
+  Input,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -19,7 +22,7 @@ import NavBar from '../Components/NavBar';
 import { API } from '../utils/API';
 
 import { ParentCard } from './ParentCard';
-import {ParentModal } from './ParentModal';
+import { ParentModal } from './ParentModal';
 
 const ParentPage = props => {
   const [user, setUser] = useState(null);
@@ -82,7 +85,7 @@ const ParentPage = props => {
       setUser(temp);
       if (temp == null || temp._id == null || temp.token == null) {
         console.log('INSIDE YEAY');
-        navigate("/signin");
+        navigate('/signin');
         // window.location.href = '/signin';
       } else {
         getParents(temp);
@@ -102,40 +105,40 @@ const ParentPage = props => {
   }, []);
 
   return (
-    <VStack
-      align={'flex-start'}
-      width={'100%'}
-      height={
-        isLoading || parents === null || parents.length === 0 ? '100vh' : 'full'
-      }
-    >
-      <NavBar user={user} location={"Parents"}/>
+    <VStack align={'flex-start'} width={'100%'} height={'100vh'}>
+      <NavBar user={user} location={'Parents'} />
       {isLoading ? (
-        <Center width={'100%'} height={'100%'}>
+        <Center width={'100%'} height={'full'}>
           <Flex>
             <CircularProgress isIndeterminate color="green.300" />
           </Flex>
         </Center>
       ) : (
         <VStack
-          paddingStart={10}
-          paddingTop={5}
-          paddingRight={10}
-          align={'flex-start'}
-          height={'100%'}
-          width={'100%'}
-          paddingBottom={10}
+        paddingStart={8}
+        paddingTop={5}
+        paddingRight={8}
+        align={'flex-start'}
+        height={parents === null || parents.length === 0 ? 'full' : 'max'}
+        width={'100%'}
         >
-          <HStack width={'100%'} align={'center'}>
+          <Wrap width={'100%'}>
             <Text fontSize={20} fontWeight={'bold'}>
               All Parents:
             </Text>
             <Spacer />
+            <InputGroup w={'xs'}>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<Search2Icon color="gray.300" />}
+              />
+              <Input type="text" placeholder="Search Parents" />
+            </InputGroup>
             <Button onClick={onOpenCreateParentModal}>Create Parent</Button>
-          </HStack>
+          </Wrap>
           <Box h={3}></Box>
           {parents === null || parents.length === 0 ? (
-            <Center width={'100%'} height={'100%'}>
+            <Center width={'100%'} height={'55%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
                   No Parents Found
