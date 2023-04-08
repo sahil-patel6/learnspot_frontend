@@ -11,6 +11,7 @@ import {
   Button,
   Wrap,
   WrapItem,
+  Badge,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -140,17 +141,17 @@ const SemestersPage = props => {
           width={'100%'}
         >
           <Wrap width={'full'}>
+            <Center>
               <Text fontSize={20} fontWeight={'bold'}>
                 All Semesters{' '}
-                {semesters != null && semesters.department != null
-                  ? `(${semesters.department.name})`
-                  : ''}
+                  {semesters != null && semesters.department != null
+                    ? `(${semesters.department.name})`
+                    : ''}
                 :
               </Text>
+            </Center>
             <Spacer />
-              <Button onClick={onOpenCreateSemesterModal}>
-                Create Semester
-              </Button>
+            <Button onClick={onOpenCreateSemesterModal}>Create Semester</Button>
           </Wrap>
           <Box h={3}></Box>
           {semesters === null ||

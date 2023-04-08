@@ -12,7 +12,8 @@ import {
   useToast,
   Image,
   Center,
-  Avatar
+  Avatar,
+  StackDivider
 } from '@chakra-ui/react';
 import { API } from '../utils/API';
 import axios from 'axios';
@@ -72,17 +73,17 @@ export const SubjectCard = props => {
   };
 
   return (
-    <Card bg={'blackAlpha.100'} minW={'xs'} mb={5}>
+    <Card bg={'blackAlpha.100'} w={'xs'} mb={5}>
       <CardBody>
         <Image
           src={props.subject.pic_url}
           borderRadius="lg"
-          height={225}
-          width={'sm'}
+          height={200}
+          width={'full'}
           align={'center'}
           fit="cover"
         />
-        <Stack mt="6" spacing="6">
+        <Stack divider={<StackDivider />} mt="6" spacing="3">
           <Heading size="md">{props.subject.name}</Heading>
           <Box>
             <Heading size="xs" textTransform="uppercase">

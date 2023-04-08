@@ -16,6 +16,9 @@ import {
   ListItem,
   UnorderedList,
   Center,
+  Badge,
+  VStack,
+  StackDivider,
 } from '@chakra-ui/react';
 import { API } from '../utils/API';
 import axios from 'axios';
@@ -23,16 +26,16 @@ import { ConfirmationModal } from '../Components/ConfirmationModal';
 
 export const TeacherCard = props => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isOpenConfirmationModal,setIsOpenConfirmationModal] = useState(false);
+  const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
 
   const toast = useToast();
 
-  const onCloseConfirmationModal = (decision) => {
+  const onCloseConfirmationModal = decision => {
     setIsOpenConfirmationModal(false);
-    if (decision){
-      onDeleteTeacher()
+    if (decision) {
+      onDeleteTeacher();
     }
-  }
+  };
 
   const onUpdateTeacher = () => {
     props.onOpenUpdateTeacherModal(props.teacher);
@@ -74,7 +77,7 @@ export const TeacherCard = props => {
     }
   };
   return (
-    <Card bg={'blackAlpha.100'} minW={'xs'} mb={5}>
+    <Card bg={'blackAlpha.100'} w={'xs'} mb={5}>
       <CardBody>
         <Center>
           <WrapItem>
@@ -85,38 +88,38 @@ export const TeacherCard = props => {
             />
           </WrapItem>
         </Center>
-        <Stack mt="6" spacing="6">
-          <Heading size="md">{props.teacher.name}</Heading>
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              Email:
-            </Heading>
-            <Text pt="2" size="xs">
-              {props.teacher.email}
+        <Stack mt="3" spacing="3" divider={<StackDivider />}>
+          <Text fontWeight={'bold'} fontSize={'20'} textAlign={'center'}>
+            {props.teacher.name}
+          </Text>
+          <HStack>
+            <Text fontWeight={'bold'} size={'xs'}>
+              Email:{' '}
             </Text>
-          </Box>
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              Phone No:
-            </Heading>
-            <Text pt="2" size="xs">
-              {props.teacher.phone}
+            <Text size={'xs'}>{props.teacher.email}</Text>
+          </HStack>
+          <HStack>
+            <Text fontWeight={'bold'} size={'xs'}>
+              Phone:{' '}
             </Text>
-          </Box>
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              Subjects:
-            </Heading>
-            <Wrap>
-              <UnorderedList>
-                {props.teacher.subjects.map(subject => (
-                  <ListItem pt="2" size="xs" key={subject._id}>
-                    <Text>{subject.name}</Text>
-                  </ListItem>
-                ))}
-              </UnorderedList>
-            </Wrap>
-          </Box>
+            <Text size={'xs'}>{props.teacher.phone}</Text>
+          </HStack>
+          <VStack align={'flex-start'}>
+            <Text fontWeight={'bold'} size={'xs'}>
+              Subjects:{' '}
+            </Text>
+              {props.teacher.subjects.map(subject => (
+                <Box
+                  bgColor={'green.200'}
+                  p={2}
+                  rounded={5}
+                  key={subject._id}
+                  w={"full"}
+                >
+                  <Text>{subject.name}</Text>
+                </Box>
+              ))}
+          </VStack>
           <HStack>
             <Button colorScheme={'blue'} onClick={onUpdateTeacher}>
               Update
@@ -124,12 +127,17 @@ export const TeacherCard = props => {
             <Spacer />
             <Button
               colorScheme={'red'}
-              onClick={()=>{setIsOpenConfirmationModal(true)}}
+              onClick={() => {
+                setIsOpenConfirmationModal(true);
+              }}
               isLoading={isLoading}
             >
               Delete
             </Button>
-            <ConfirmationModal isOpen={isOpenConfirmationModal} onClose={onCloseConfirmationModal}/>
+            <ConfirmationModal
+              isOpen={isOpenConfirmationModal}
+              onClose={onCloseConfirmationModal}
+            />
           </HStack>
         </Stack>
       </CardBody>

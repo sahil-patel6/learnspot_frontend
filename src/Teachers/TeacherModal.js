@@ -27,11 +27,12 @@ import axios from 'axios';
 import ErrorMessage from '../Components/ErrorMessage';
 import { AddTeacherSubjectModal } from './AddTeacherSubjectModal';
 import { ConfirmationModal } from '../Components/ConfirmationModal';
+import 'yup-phone';
 
 export const TeacherModal = props => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isOpenConfirmationModal,setIsOpenConfirmationModal] = useState(false);
-  const [confirmation,setConfirmation] = useState(false);
+  const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
 
   const toast = useToast();
 
@@ -41,13 +42,13 @@ export const TeacherModal = props => {
     setIsLoading(false);
   };
 
-  const onCloseConfirmationModal = (decision) => {
+  const onCloseConfirmationModal = decision => {
     setIsOpenConfirmationModal(false);
-    if (decision){
+    if (decision) {
       setConfirmation(true);
       formikRef.current.submitForm();
     }
-  }
+  };
 
   const [isAddTeacherSubjectModelOpen, setIsAddTeacherSubjectModelOpen] =
     useState(false);
@@ -112,6 +113,8 @@ export const TeacherModal = props => {
                   props.activeTeacher != null ? props.activeTeacher.name : '',
                 email:
                   props.activeTeacher != null ? props.activeTeacher.email : '',
+                phone:
+                  props.activeTeacher != null ? props.activeTeacher.phone : '',
                 subjects:
                   props.activeTeacher != null
                     ? props.activeTeacher.subjects.slice()
@@ -125,6 +128,9 @@ export const TeacherModal = props => {
                 email: Yup.string()
                   .email('Invalid email address')
                   .required('Email is required'),
+                phone: Yup.string()
+                  .length(10, 'Phone number should be valid')
+                  .required('Phone number is required'),
                 subjects: Yup.array().min(1, 'Please add atleast one subject'),
               })}
               onSubmit={async (values, { setSubmitting }) => {
@@ -133,9 +139,9 @@ export const TeacherModal = props => {
                   console.log(props.user._id);
                   let result = null;
                   if (props.activeTeacher == null) {
-                    if (values.plainPassword.length < 8){
+                    if (values.plainPassword.length < 8) {
                       toast({
-                        title: "Password should contain atleast 8 characters",
+                        title: 'Password should contain atleast 8 characters',
                         status: 'error',
                         duration: '2000',
                         isClosable: true,
@@ -143,7 +149,7 @@ export const TeacherModal = props => {
                       });
                       return;
                     }
-                    if (!confirmation){
+                    if (!confirmation) {
                       setIsOpenConfirmationModal(true);
                       return;
                     }
@@ -153,6 +159,7 @@ export const TeacherModal = props => {
                       {
                         name: values.name,
                         email: values.email,
+                        phone: values.phone,
                         subjects: values.subjects.map(subject => subject._id),
                         plainPassword: values.plainPassword,
                       },
@@ -177,8 +184,7 @@ export const TeacherModal = props => {
                       position: 'top-right',
                     });
                   } else {
-                    
-                    if (!confirmation){
+                    if (!confirmation) {
                       setIsOpenConfirmationModal(true);
                       return;
                     }
@@ -191,6 +197,7 @@ export const TeacherModal = props => {
                       {
                         name: values.name,
                         email: values.email,
+                        phone: values.phone,
                         subjects: values.subjects.map(subject => subject._id),
                       },
                       {
@@ -228,7 +235,7 @@ export const TeacherModal = props => {
                   });
                   setIsLoading(false);
                   setConfirmation(false);
-                  console.log(confirmation,"Confirmation")
+                  console.log(confirmation, 'Confirmation');
                 }
               }}
             >
@@ -251,6 +258,15 @@ export const TeacherModal = props => {
                     id="email"
                     type="email"
                     {...formik.getFieldProps('email')}
+                  />
+                  {formik.touched.phone && formik.errors.phone ? (
+                    <ErrorMessage message={formik.errors.phone} />
+                  ) : null}
+                  <FormLabel htmlFor="phone">Teacher Phone:</FormLabel>
+                  <Input
+                    id="phone"
+                    type="number"
+                    {...formik.getFieldProps('phone')}
                   />
                   {props.activeTeacher == null ? (
                     <FormLabel htmlFor="plainPassword">
@@ -338,7 +354,10 @@ export const TeacherModal = props => {
               onClose={onCloseAddTeacherSubjectModel}
               user={props.user}
             />
-            <ConfirmationModal isOpen={isOpenConfirmationModal} onClose={onCloseConfirmationModal} />
+            <ConfirmationModal
+              isOpen={isOpenConfirmationModal}
+              onClose={onCloseConfirmationModal}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

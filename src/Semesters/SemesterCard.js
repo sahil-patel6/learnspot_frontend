@@ -73,7 +73,7 @@ export const SemesterCard = props => {
   };
 
   return (
-    <Card bg={'blackAlpha.100'} minW={"xs"} mb={5}>
+    <Card bg={'blackAlpha.100'} w={"xs"} mb={5}>
       <Link to={`${props.semester._id}/subjects`}>
         <CardHeader>
           <Heading size="md">Semester Name: {props.semester.name}</Heading>

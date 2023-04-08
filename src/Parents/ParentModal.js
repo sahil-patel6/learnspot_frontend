@@ -111,6 +111,8 @@ export const ParentModal = props => {
                 name: props.activeParent != null ? props.activeParent.name : '',
                 email:
                   props.activeParent != null ? props.activeParent.email : '',
+                phone:
+                  props.activeParent != null ? props.activeParent.phone : '',
                 students:
                   props.activeParent != null
                     ? props.activeParent.students.slice()
@@ -124,6 +126,9 @@ export const ParentModal = props => {
                 email: Yup.string()
                   .email('Invalid email address')
                   .required('Email is required'),
+                phone: Yup.string()
+                  .length(10, 'Phone number should be valid')
+                  .required('Phone number is required'),
                 students: Yup.array().min(1, 'Please add atleast one child'),
               })}
               onSubmit={async (values, { setSubmitting }) => {
@@ -153,6 +158,7 @@ export const ParentModal = props => {
                       {
                         name: values.name,
                         email: values.email,
+                        phone: values.phone,
                         students: values.students.map(student => student._id),
                         plainPassword: values.plainPassword,
                       },
@@ -188,6 +194,7 @@ export const ParentModal = props => {
                       {
                         name: values.name,
                         email: values.email,
+                        phone: values.phone,
                         students: values.students.map(student => student._id),
                       },
                       {
@@ -248,6 +255,16 @@ export const ParentModal = props => {
                     type="email"
                     {...formik.getFieldProps('email')}
                   />
+                  
+                  {formik.touched.phone && formik.errors.phone ? (
+                      <ErrorMessage message={formik.errors.phone} />
+                    ) : null}
+                    <FormLabel htmlFor="phone">Teacher Phone:</FormLabel>
+                    <Input
+                      id="phone"
+                      type="number"
+                      {...formik.getFieldProps('phone')}
+                    />
                   {props.activeParent == null ? (
                     <FormLabel htmlFor="plainPassword">
                       Parent Password:

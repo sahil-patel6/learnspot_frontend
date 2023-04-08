@@ -157,7 +157,7 @@ const ParentPage = props => {
           </Wrap>
           <Box h={3}></Box>
           {parents === null || parents.length === 0 ? (
-            <Center width={'100%'} height={'55%'}>
+            <Center width={'100%'} height={'60%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
                   No Parents Found

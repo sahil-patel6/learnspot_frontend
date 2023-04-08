@@ -16,6 +16,9 @@ import {
   ListItem,
   UnorderedList,
   Center,
+  Badge,
+  StackDivider,
+  VStack,
 } from '@chakra-ui/react';
 import { API } from '../utils/API';
 import axios from 'axios';
@@ -23,16 +26,16 @@ import { ConfirmationModal } from '../Components/ConfirmationModal';
 
 export const ParentCard = props => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isOpenConfirmationModal,setIsOpenConfirmationModal] = useState(false);
+  const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
 
   const toast = useToast();
 
-  const onCloseConfirmationModal = (decision) => {
+  const onCloseConfirmationModal = decision => {
     setIsOpenConfirmationModal(false);
-    if (decision){
-      onDeleteParent()
+    if (decision) {
+      onDeleteParent();
     }
-  }
+  };
 
   const onUpdateParent = () => {
     props.onOpenUpdateParentModal(props.parent);
@@ -74,7 +77,7 @@ export const ParentCard = props => {
     }
   };
   return (
-    <Card bg={'blackAlpha.100'} minW={'xs'} mb={5}>
+    <Card bg={'blackAlpha.100'} w={'xs'} mb={5}>
       <CardBody>
         <Center>
           <WrapItem>
@@ -85,38 +88,39 @@ export const ParentCard = props => {
             />
           </WrapItem>
         </Center>
-        <Stack mt="6" spacing="6">
-          <Heading size="md">{props.parent.name}</Heading>
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              Email:
-            </Heading>
-            <Text pt="2" size="xs">
-              {props.parent.email}
+        <Stack mt="3" spacing="3" divider={<StackDivider />}>
+          <Text fontWeight={'bold'} fontSize={'20'} textAlign={'center'}>
+            {props.parent.name}
+          </Text>
+          <HStack>
+            <Text fontWeight={'bold'} size={'xs'}>
+              Email:{' '}
             </Text>
-          </Box>
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              Phone No:
-            </Heading>
-            <Text pt="2" size="xs">
-              {props.parent.phone}
+            <Text size={'xs'}>{props.parent.email}</Text>
+          </HStack>
+          <HStack>
+            <Text fontWeight={'bold'} size={'xs'}>
+              Phone:{' '}
             </Text>
-          </Box>
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              Students:
-            </Heading>
-            <Wrap>
-              <UnorderedList>
-                {props.parent.students.map(parent => (
-                  <ListItem pt="2" size="xs" key={parent._id}>
-                    <Text key={parent._id}>{parent.name}</Text>
-                  </ListItem>
-                ))}
-              </UnorderedList>
-            </Wrap>
-          </Box>
+            <Text size={'xs'}>{props.parent.phone}</Text>
+          </HStack>
+          <VStack align={'flex-start'}>
+            <Text fontWeight={'bold'} size={'xs'}>
+              Students:{' '}
+            </Text>
+            {props.parent.students.map(student => (
+              <Box
+                bgColor={'green.200'}
+                p={2}
+                rounded={5}
+                key={student._id}
+                w={'full'}
+              >
+                <Text>{student.name}</Text>
+              </Box>
+            ))}
+          </VStack>
+
           <HStack>
             <Button colorScheme={'blue'} onClick={onUpdateParent}>
               Update
@@ -124,13 +128,17 @@ export const ParentCard = props => {
             <Spacer />
             <Button
               colorScheme={'red'}
-              onClick={()=>{setIsOpenConfirmationModal(true)}}
+              onClick={() => {
+                setIsOpenConfirmationModal(true);
+              }}
               isLoading={isLoading}
             >
               Delete
             </Button>
-            <ConfirmationModal isOpen={isOpenConfirmationModal} onClose={onCloseConfirmationModal}/>
-
+            <ConfirmationModal
+              isOpen={isOpenConfirmationModal}
+              onClose={onCloseConfirmationModal}
+            />
           </HStack>
         </Stack>
       </CardBody>

@@ -158,7 +158,7 @@ const TeachersPage = props => {
           </Wrap>
           <Box h={3}></Box>
           {teachers === null || teachers.length === 0 ? (
-            <Center width={'100%'} height={'55%'}>
+            <Center width={'100%'} height={'60%'}>
               <Flex>
                 <Text fontSize={'3xl'} fontWeight={'semibold'}>
                   No Teachers Found

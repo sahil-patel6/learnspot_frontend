@@ -71,7 +71,7 @@ export const DepartmentCard = props => {
   };
 
   return (
-    <Card bg={'blackAlpha.100'} minW={'xs'} mb={5}>
+    <Card bg={'blackAlpha.100'} w={'xs'} mb={5}>
       <Link to={`/department/${props.department._id}/semesters`}>
         <CardHeader>
           <Heading size="md">Department Name: {props.department.name}</Heading>

@@ -138,6 +138,10 @@ export const StudentModal = props => {
                     props.activeStudent != null
                       ? props.activeStudent.email
                       : '',
+                  phone:
+                    props.activeStudent != null
+                      ? props.activeStudent.phone
+                      : '',
                   roll_number:
                     props.activeStudent != null
                       ? props.activeStudent.roll_number
@@ -159,6 +163,9 @@ export const StudentModal = props => {
                   email: Yup.string()
                     .email('Invalid email address')
                     .required('Email is required'),
+                  phone: Yup.string()
+                    .length(10, 'Phone number should be valid')
+                    .required('Phone number is required'),
                   roll_number: Yup.string().required('Roll Number is required'),
                   semester: Yup.string().required('Please select semester'),
                 })}
@@ -168,9 +175,9 @@ export const StudentModal = props => {
                     console.log(props.user._id);
                     let result = null;
                     if (props.activeStudent == null) {
-                      if (values.plainPassword.length < 8){
+                      if (values.plainPassword.length < 8) {
                         toast({
-                          title: "Password should contain atleast 8 characters",
+                          title: 'Password should contain atleast 8 characters',
                           status: 'error',
                           duration: '2000',
                           isClosable: true,
@@ -178,10 +185,10 @@ export const StudentModal = props => {
                         });
                         return;
                       }
-                      if (!confirmation){
+                      if (!confirmation) {
                         setIsOpenConfirmationModal(true);
                         return;
-                      }  
+                      }
                       setIsLoading(true);
                       console.log(
                         'HELLO BOYSSSS',
@@ -193,6 +200,7 @@ export const StudentModal = props => {
                         {
                           name: values.name,
                           email: values.email,
+                          phone: values.phone,
                           roll_number: values.roll_number,
                           semester: selectedSemester._id,
                           plainPassword: values.plainPassword,
@@ -218,8 +226,7 @@ export const StudentModal = props => {
                         position: 'top-right',
                       });
                     } else {
-                    
-                      if (!confirmation){
+                      if (!confirmation) {
                         setIsOpenConfirmationModal(true);
                         return;
                       }
@@ -232,6 +239,7 @@ export const StudentModal = props => {
                         {
                           name: values.name,
                           email: values.email,
+                          phone: values.phone,
                           roll_number: values.roll_number,
                           semester: selectedSemester._id,
                         },
@@ -292,6 +300,15 @@ export const StudentModal = props => {
                       id="email"
                       type="email"
                       {...formik.getFieldProps('email')}
+                    />
+                    {formik.touched.phone && formik.errors.phone ? (
+                      <ErrorMessage message={formik.errors.phone} />
+                    ) : null}
+                    <FormLabel htmlFor="phone">Teacher Phone:</FormLabel>
+                    <Input
+                      id="phone"
+                      type="number"
+                      {...formik.getFieldProps('phone')}
                     />
                     {formik.touched.roll_number && formik.errors.roll_number ? (
                       <ErrorMessage message={formik.errors.roll_number} />
