@@ -201,13 +201,30 @@ export const PromoteStudentsModal = props => {
                   try {
                     console.log(props.user._id);
                     let result = null;
-                    console.log(students, 'INSIDE SUNBMIT');
-                    if (
-                      students == null ||
-                      !students.find(s => s.promote === true)
-                    ) {
+                    console.log(selectedSemester,selectedToSemester, 'INSIDE SUNBMIT');
+                    if (students == null){
                       toast({
-                        title: 'Please select the required fields',
+                        title: 'Please select department and semester',
+                        status: 'error',
+                        duration: '2000',
+                        isClosable: true,
+                        position: 'top-right',
+                      });
+                      return; 
+                    }
+                    if (!students.find(s => s.promote === true)){
+                      toast({
+                        title: 'Please select atleast one student to promote',
+                        status: 'error',
+                        duration: '2000',
+                        isClosable: true,
+                        position: 'top-right',
+                      });
+                      return;
+                    }
+                    if (selectedSemester._id == selectedToSemester._id){
+                      toast({
+                        title: 'Semester and promote to semester should be diffrent',
                         status: 'error',
                         duration: '2000',
                         isClosable: true,
