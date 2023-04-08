@@ -30,6 +30,7 @@ export class API {
 
   
   /// STUDENTS
+  static PROMOTE_STUDENTS = (admin_id) => `${this.BASE_URL}/students/promote/admin/${admin_id}`;
   static GET_ALL_STUDENTS = (admin_id) => `${this.BASE_URL}/students/admin/${admin_id}`;
   static CREATE_STUDENT = (admin_id) => `${this.BASE_URL}/student/create/admin/${admin_id}`;
   static UPDATE_STUDENT = (student_id,admin_id) => `${this.BASE_URL}/student/${student_id}/admin/${admin_id}`;

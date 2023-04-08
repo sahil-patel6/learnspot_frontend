@@ -36,7 +36,7 @@ export const ParentModal = props => {
 
   const formikRef = useRef();
 
-  const onCloseModal = () => {
+  const refreshState = () => {
     setIsLoading(false);
   };
 
@@ -93,8 +93,8 @@ export const ParentModal = props => {
       <Modal
         isOpen={props.isOpen}
         onClose={() => {
-          onCloseModal();
           props.onClose();
+          refreshState();
         }}
         isCentered
       >
@@ -171,8 +171,8 @@ export const ParentModal = props => {
                     setIsLoading(true);
                     console.log(result.data, "PARENT's CHILD");
                     setIsLoading(false);
-                    onCloseModal();
                     props.onClose(result.data);
+                    refreshState();
                     toast({
                       title: `${
                         props.activeParent == null ? 'Created' : 'Updated'
@@ -207,8 +207,8 @@ export const ParentModal = props => {
                     setIsLoading(true);
                     console.log(result.data);
                     setIsLoading(false);
-                    onCloseModal();
                     props.onClose(result.data);
+                    refreshState();
                     toast({
                       title: `${
                         props.activeParent == null ? 'Created' : 'Updated'
@@ -259,7 +259,7 @@ export const ParentModal = props => {
                   {formik.touched.phone && formik.errors.phone ? (
                       <ErrorMessage message={formik.errors.phone} />
                     ) : null}
-                    <FormLabel htmlFor="phone">Teacher Phone:</FormLabel>
+                    <FormLabel htmlFor="phone">Parent Phone:</FormLabel>
                     <Input
                       id="phone"
                       type="number"
@@ -334,8 +334,8 @@ export const ParentModal = props => {
                     </Button>
                     <Button
                       onClick={() => {
-                        onCloseModal();
                         props.onClose();
+                        refreshState();
                       }}
                     >
                       Cancel

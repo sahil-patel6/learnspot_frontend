@@ -26,13 +26,18 @@ export const AddTeacherSubjectModal = props => {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedSemester, setSelectedSemester] = useState(null);
 
-  const onCloseModal = () => {
+  const refreshState = () => {
     setIsLoading(false);
+    setDepartments([]);
+    setSelectedDepartment(null);
+    setSelectedSemester(null);
+    setSelectedSubject(null);
   };
 
   const getDepartments = async () => {
     try {
       setDepartments(null);
+      refreshState();
       setIsLoading(true);
       const result = await axios.get(API.GET_ALL_DEPARTMENTS(props.user._id), {
         headers: {
@@ -79,8 +84,8 @@ export const AddTeacherSubjectModal = props => {
       <Modal
         isOpen={props.isOpen}
         onClose={() => {
-          onCloseModal();
           props.onClose(selectedSubject);
+          refreshState();
         }}
         isCentered
       >
@@ -162,6 +167,7 @@ export const AddTeacherSubjectModal = props => {
                       e.preventDefault();
                       if (selectedSubject!=null){
                         props.onClose(selectedSubject);
+                        refreshState();
                       }else{
                         toast({
                           title: "Please Select the subject",
@@ -177,8 +183,8 @@ export const AddTeacherSubjectModal = props => {
                   </Button>
                   <Button
                     onClick={() => {
-                      onCloseModal();
                       props.onClose(selectedSubject);
+                      refreshState();
                     }}
                   >
                     Cancel

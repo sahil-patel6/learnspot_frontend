@@ -37,7 +37,7 @@ export const TeacherModal = props => {
 
   const formikRef = useRef();
 
-  const onCloseModal = () => {
+  const refreshState = () => {
     setIsLoading(false);
   };
 
@@ -93,8 +93,8 @@ export const TeacherModal = props => {
       <Modal
         isOpen={props.isOpen}
         onClose={() => {
-          onCloseModal();
           props.onClose();
+          refreshState();
         }}
         isCentered
       >
@@ -171,8 +171,8 @@ export const TeacherModal = props => {
                     setIsLoading(true);
                     console.log(result.data);
                     setIsLoading(false);
-                    onCloseModal();
                     props.onClose(result.data);
+                    refreshState();
                     toast({
                       title: `${
                         props.activeTeacher == null ? 'Created' : 'Updated'
@@ -209,8 +209,8 @@ export const TeacherModal = props => {
                     setIsLoading(true);
                     console.log(result.data);
                     setIsLoading(false);
-                    onCloseModal();
                     props.onClose(result.data);
+                    refreshState();
                     toast({
                       title: `${
                         props.activeTeacher == null ? 'Created' : 'Updated'
@@ -337,9 +337,9 @@ export const TeacherModal = props => {
                     </Button>
                     <Button
                       onClick={() => {
-                        onCloseModal();
                         setConfirmation(false);
                         props.onClose();
+                        refreshState();
                       }}
                     >
                       Cancel

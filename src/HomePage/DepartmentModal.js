@@ -28,6 +28,10 @@ export const DepartmentModal = props => {
   const toast = useToast();
   const formikRef = useRef();
 
+  const refreshState = () => {
+    setIsLoading(false);
+  };
+
   const onCloseConfirmationModal = decision => {
     setIsOpenConfirmationModal(false);
     if (decision) {
@@ -40,7 +44,10 @@ export const DepartmentModal = props => {
     <>
       <Modal
         isOpen={props.isOpen}
-        onClose={props.onClose}
+        onClose={() => {
+          props.onClose();
+          refreshState();
+        }}
         isCentered
       >
         <ModalOverlay />
@@ -125,6 +132,7 @@ export const DepartmentModal = props => {
                   }
                   setIsLoading(false);
                   props.onClose(result.data);
+                  refreshState();
                   toast({
                     title: `${
                       props.activeDepartment == null ? 'Created' : 'Updated'
@@ -193,7 +201,14 @@ export const DepartmentModal = props => {
                       {props.activeDepartment == null ? 'Create' : 'Update'}{' '}
                       Department
                     </Button>
-                    <Button onClick={() => props.onClose()}>Cancel</Button>
+                    <Button
+                      onClick={() => {
+                        props.onClose();
+                        refreshState();
+                      }}
+                    >
+                      Cancel
+                    </Button>
                   </HStack>
                   <ConfirmationModal
                     isOpen={isOpenConfirmationModal}

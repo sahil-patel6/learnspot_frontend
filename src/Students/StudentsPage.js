@@ -20,6 +20,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import NavBar from '../Components/NavBar';
 import { API } from '../utils/API';
+import { PromoteStudentsModal } from './PromoteStudentModal';
 
 import { StudentCard } from './StudentCard';
 import { StudentModal } from './StudentModal';
@@ -32,6 +33,8 @@ const StudentPage = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isStudentOpenModal, setIsStudentOpenModal] = useState(false);
+  const [isPromoteStudentsOpenModal, setIsPromoteStudentsOpenModal] =
+    useState(false);
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -81,21 +84,20 @@ const StudentPage = props => {
     }
   };
 
-  const searchStudents = (value)=>{
-    console.log(value)
-    if (value==""){
+  const searchStudents = value => {
+    console.log(value);
+    if (value == '') {
       setStudents(originalStudents);
-    }else{
+    } else {
       let searchedStudents = [];
-      originalStudents.map((s)=>{
-        if (s.name.toLowerCase().includes(value.toLowerCase())){
+      originalStudents.map(s => {
+        if (s.name.toLowerCase().includes(value.toLowerCase())) {
           searchedStudents.push(s);
         }
-      })
+      });
       setStudents(searchedStudents);
     }
-  }
-
+  };
 
   useEffect(() => {
     try {
@@ -151,9 +153,16 @@ const StudentPage = props => {
                 pointerEvents="none"
                 children={<Search2Icon color="gray.300" />}
               />
-              <Input type="text" placeholder="Search Students" onChange={(e)=>searchStudents(e.target.value)}/>
+              <Input
+                type="text"
+                placeholder="Search Students"
+                onChange={e => searchStudents(e.target.value)}
+              />
             </InputGroup>
             <Button onClick={onOpenCreateStudentModal}>Create Student</Button>
+            <Button onClick={() => setIsPromoteStudentsOpenModal(true)}>
+              Promote Students
+            </Button>
           </Wrap>
           <Box h={3}></Box>
           {students === null || students.length === 0 ? (
@@ -185,6 +194,17 @@ const StudentPage = props => {
             onClose={onCloseStudentModal}
             user={user}
             activeStudent={activeStudent}
+          />
+
+          <PromoteStudentsModal
+            isOpen={isPromoteStudentsOpenModal}
+            onClose={(data) => {
+              setIsPromoteStudentsOpenModal(false);
+              if (data){
+                getStudents(user);
+              }
+            }}
+            user={user}
           />
         </VStack>
       )}

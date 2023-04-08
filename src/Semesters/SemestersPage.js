@@ -6,12 +6,10 @@ import {
   CircularProgress,
   Text,
   Box,
-  HStack,
   Spacer,
   Button,
   Wrap,
   WrapItem,
-  Badge,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';

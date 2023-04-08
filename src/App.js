@@ -9,7 +9,7 @@ import SubjectsPage from './Subjects/SubjectsPage';
 import TeachersPage from './Teachers/TeachersPage';
 import StudentPage from './Students/StudentsPage';
 import ParentPage from './Parents/ParentsPage';
-
+import './App.css';
 function App() {
   return (
     <ChakraProvider theme={theme}>

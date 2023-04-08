@@ -39,6 +39,11 @@ export const SubjectModal = props => {
 
   const formikRef = useRef();
 
+  const refreshState = () => {
+    setIsLoading(false);
+    setPickedSubjectImage(null);
+  };
+
   const onCloseConfirmationModal = decision => {
     setIsOpenConfirmationModal(false);
     if (decision) {
@@ -76,18 +81,13 @@ export const SubjectModal = props => {
     };
   }
 
-  const onCloseModal = () => {
-    setIsLoading(false);
-    setPickedSubjectImage(null);
-  };
-
   return (
     <>
       <Modal
         isOpen={props.isOpen}
         onClose={() => {
-          onCloseModal();
           props.onClose();
+          refreshState();
         }}
         isCentered
       >
@@ -166,8 +166,8 @@ export const SubjectModal = props => {
                         setIsLoading(true);
                         console.log(result.data);
                         setIsLoading(false);
-                        onCloseModal();
                         props.onClose(result.data);
+                        refreshState();
                         toast({
                           title: `${
                             props.activeSubject == null ? 'Created' : 'Updated'
@@ -244,8 +244,8 @@ export const SubjectModal = props => {
                     setIsLoading(true);
                     console.log(result.data);
                     setIsLoading(false);
-                    onCloseModal();
                     props.onClose(result.data);
+                    refreshState();
                     toast({
                       title: `${
                         props.activeSubject == null ? 'Created' : 'Updated'
@@ -286,7 +286,7 @@ export const SubjectModal = props => {
                     <Image
                       src={URL.createObjectURL(pickedSubjectImage)}
                       borderRadius="lg"
-                      // height={225}
+                      height={225}
                       w={'100%'}
                       align={'center'}
                       marginBottom={5}
@@ -297,7 +297,7 @@ export const SubjectModal = props => {
                     <Image
                       src={props.activeSubject.pic_url}
                       borderRadius="lg"
-                      // height={225}
+                      height={225}
                       w={'100%'}
                       align={'center'}
                       marginBottom={5}
@@ -345,8 +345,8 @@ export const SubjectModal = props => {
                     </Button>
                     <Button
                       onClick={() => {
-                        onCloseModal();
                         props.onClose();
+                        refreshState();
                       }}
                     >
                       Cancel

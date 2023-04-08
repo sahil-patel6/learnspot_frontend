@@ -26,8 +26,12 @@ export const AddParentChildModal = props => {
   const toast = useToast();
   const [selectedDepartment, setSelectedDepartment] = useState(null);
 
-  const onCloseModal = () => {
+  const refreshState = () => {
     setIsLoading(false);
+    setDepartments([]);
+    setStudents([]);
+    setSelectedStudent(null);
+    setSelectedDepartment(null);
   };
 
   const getDepartments = async () => {
@@ -110,9 +114,9 @@ export const AddParentChildModal = props => {
       <Modal
         isOpen={props.isOpen}
         onClose={() => {
-          onCloseModal();
           console.log(selectedDepartment,selectedStudent);
           props.onClose(selectedStudent);
+          refreshState();
         }}
         isCentered
       >
@@ -192,6 +196,7 @@ export const AddParentChildModal = props => {
                       e.preventDefault();
                       if (selectedStudent != null) {
                         props.onClose(selectedStudent);
+                        refreshState();
                       } else {
                         toast({
                           title: 'Please Select the child',
@@ -207,8 +212,8 @@ export const AddParentChildModal = props => {
                   </Button>
                   <Button
                     onClick={() => {
-                      onCloseModal();
                       props.onClose(selectedStudent);
+                      refreshState();
                     }}
                   >
                     Cancel

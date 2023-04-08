@@ -30,18 +30,28 @@ export const SemesterModal = props => {
 
   const formikRef = useRef();
 
-  const onCloseConfirmationModal = (decision) => {
+  const refreshState = () => {
+    setIsLoading(false);
+  };
+
+  const onCloseConfirmationModal = decision => {
     setIsOpenConfirmationModal(false);
-    if (decision){
+    if (decision) {
       setConfirmation(true);
       formikRef.current.submitForm();
     }
-  }
-
+  };
 
   return (
     <>
-      <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
+      <Modal
+        isOpen={props.isOpen}
+        onClose={() => {
+          props.onClose();
+          refreshState();
+        }}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -65,7 +75,7 @@ export const SemesterModal = props => {
                 try {
                   console.log(props.user._id);
                   let result = null;
-                  if (!confirmation){
+                  if (!confirmation) {
                     setIsOpenConfirmationModal(true);
                     return;
                   }
@@ -102,6 +112,7 @@ export const SemesterModal = props => {
                   console.log(result.data);
                   setIsLoading(false);
                   props.onClose(result.data);
+                  refreshState();
                   toast({
                     title: `${
                       props.activeSemester == null ? 'Created' : 'Updated'
@@ -111,7 +122,7 @@ export const SemesterModal = props => {
                     isClosable: true,
                     position: 'top-right',
                   });
-                  setConfirmation(false)
+                  setConfirmation(false);
                 } catch (error) {
                   console.log(error);
                   toast({
@@ -122,7 +133,7 @@ export const SemesterModal = props => {
                     isClosable: true,
                     position: 'top-right',
                   });
-                  setConfirmation(false)
+                  setConfirmation(false);
                   setIsLoading(false);
                 }
               }}
@@ -148,7 +159,14 @@ export const SemesterModal = props => {
                       {props.activeSemester == null ? 'Create' : 'Update'}{' '}
                       Semester
                     </Button>
-                    <Button onClick={() => props.onClose()}>Cancel</Button>
+                    <Button
+                      onClick={() => {
+                        props.onClose();
+                        refreshState();
+                      }}
+                    >
+                      Cancel
+                    </Button>
                   </ModalFooter>
                   <ConfirmationModal
                     isOpen={isOpenConfirmationModal}

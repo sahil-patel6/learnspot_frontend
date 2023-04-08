@@ -15,6 +15,7 @@ import {
   Select,
   Flex,
   CircularProgress,
+  Box,
 } from '@chakra-ui/react';
 
 import { Formik } from 'formik';
@@ -35,8 +36,10 @@ export const StudentModal = props => {
   const toast = useToast();
   const formikRef = useRef();
 
-  const onCloseModal = () => {
+  const refreshState = () => {
     setIsLoading(false);
+    setDepartments([]);
+    setSelectedSemester(null);
   };
 
   const onCloseConfirmationModal = decision => {
@@ -52,6 +55,7 @@ export const StudentModal = props => {
   const getDepartments = async user => {
     try {
       setDepartments(null);
+      refreshState();
       setIsLoading(true);
       console.log(user);
       const result = await axios.get(API.GET_ALL_DEPARTMENTS(user._id), {
@@ -107,11 +111,12 @@ export const StudentModal = props => {
 
   return (
     <>
+    <Box className='scroll'>
       <Modal
         isOpen={props.isOpen}
         onClose={() => {
-          onCloseModal();
           props.onClose();
+          refreshState();
         }}
         isCentered
       >
@@ -214,8 +219,8 @@ export const StudentModal = props => {
                       setIsLoading(true);
                       console.log(result.data);
                       setIsLoading(false);
-                      onCloseModal();
                       props.onClose(result.data);
+                      refreshState();
                       toast({
                         title: `${
                           props.activeStudent == null ? 'Created' : 'Updated'
@@ -253,8 +258,8 @@ export const StudentModal = props => {
                       setIsLoading(true);
                       console.log(result.data);
                       setIsLoading(false);
-                      onCloseModal();
                       props.onClose(result.data);
+                      refreshState();
                       toast({
                         title: `${
                           props.activeStudent == null ? 'Created' : 'Updated'
@@ -304,7 +309,7 @@ export const StudentModal = props => {
                     {formik.touched.phone && formik.errors.phone ? (
                       <ErrorMessage message={formik.errors.phone} />
                     ) : null}
-                    <FormLabel htmlFor="phone">Teacher Phone:</FormLabel>
+                    <FormLabel htmlFor="phone">Student Phone:</FormLabel>
                     <Input
                       id="phone"
                       type="number"
@@ -386,8 +391,8 @@ export const StudentModal = props => {
                       </Button>
                       <Button
                         onClick={() => {
-                          onCloseModal();
                           props.onClose();
+                          refreshState();
                         }}
                       >
                         Cancel
@@ -404,6 +409,7 @@ export const StudentModal = props => {
           </ModalBody>
         </ModalContent>
       </Modal>
+      </Box>
     </>
   );
 };
