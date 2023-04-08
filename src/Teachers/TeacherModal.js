@@ -27,7 +27,6 @@ import axios from 'axios';
 import ErrorMessage from '../Components/ErrorMessage';
 import { AddTeacherSubjectModal } from './AddTeacherSubjectModal';
 import { ConfirmationModal } from '../Components/ConfirmationModal';
-import 'yup-phone';
 
 export const TeacherModal = props => {
   const [isLoading, setIsLoading] = useState(false);
