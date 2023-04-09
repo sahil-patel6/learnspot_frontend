@@ -129,7 +129,32 @@ export const SubjectModal = props => {
                         position: 'top-right',
                       });
                     }
+                    console.log(pickedSubjectImage);
+                    if (
+                      pickedSubjectImage.type != 'image/jpeg' &&
+                      pickedSubjectImage.type != 'image/png'
+                    ) {
+                      return toast({
+                        title: 'only jpg or png images are supported',
+                        status: 'error',
+                        duration: '2000',
+                        isClosable: true,
+                        position: 'top-right',
+                      });
+                    }
 
+                    if (
+                      pickedSubjectImage != null &&
+                      pickedSubjectImage.size > (500*1024)
+                    ) {
+                      return toast({
+                        title: 'image size should be less than 500 KB',
+                        status: 'error',
+                        duration: '2000',
+                        isClosable: true,
+                        position: 'top-right',
+                      });
+                    }
                     if (!confirmation) {
                       setIsOpenConfirmationModal(true);
                       return;
@@ -183,7 +208,7 @@ export const SubjectModal = props => {
                         console.log(error, 'SUBJECT ERROR');
                         toast({
                           title: 'An error occurred',
-                          description: error.response.data.error,
+                          description: error.response != null ? error.response.data.error : error.message,
                           status: 'error',
                           duration: '2000',
                           isClosable: true,
@@ -194,6 +219,31 @@ export const SubjectModal = props => {
                       });
                     setConfirmation(false);
                   } else {
+                    if (
+                      pickedSubjectImage != null &&
+                      pickedSubjectImage.type != 'image/jpeg' &&
+                      pickedSubjectImage.type != 'image/png'
+                    ) {
+                      return toast({
+                        title: 'only jpg or png images are supported',
+                        status: 'error',
+                        duration: '2000',
+                        isClosable: true,
+                        position: 'top-right',
+                      });
+                    }
+                    if (
+                      pickedSubjectImage != null &&
+                      pickedSubjectImage.size > (500*1024)
+                    ) {
+                      return toast({
+                        title: 'image size should be less than 500 KB',
+                        status: 'error',
+                        duration: '2000',
+                        isClosable: true,
+                        position: 'top-right',
+                      });
+                    }
                     if (!confirmation) {
                       setIsOpenConfirmationModal(true);
                       return;
@@ -262,7 +312,7 @@ export const SubjectModal = props => {
                   console.log(error, 'SUBJECT ERROR');
                   toast({
                     title: 'An error occurred',
-                    description: error.response.data.error,
+                    description: error.response != null ? error.response.data.error : error.message,
                     status: 'error',
                     duration: '2000',
                     isClosable: true,
@@ -281,6 +331,7 @@ export const SubjectModal = props => {
                     ref={inputFile}
                     style={{ display: 'none' }}
                     onChange={handleSubjectPictureChange}
+                    accept={'image/*'}
                   />
                   {pickedSubjectImage ? (
                     <Image

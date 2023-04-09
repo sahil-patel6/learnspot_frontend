@@ -62,7 +62,7 @@ export const SubjectCard = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response.data.error,
+        description: error.response != null ? error.response.data.error : error.message,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -82,6 +82,7 @@ export const SubjectCard = props => {
           width={'full'}
           align={'center'}
           fit="cover"
+          name={props.subject.name}
         />
         <Stack divider={<StackDivider />} mt="6" spacing="3">
           <Heading size="md">{props.subject.name}</Heading>

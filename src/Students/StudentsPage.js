@@ -74,7 +74,7 @@ const StudentPage = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response.data.error,
+        description: error.response != null ? error.response.data.error : error.message,
         status: 'error',
         duration: '2000',
         isClosable: true,
