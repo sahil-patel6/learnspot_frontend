@@ -17,6 +17,8 @@ import {
   List,
   HStack,
   Center,
+  WrapItem,
+  Avatar,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 
@@ -226,7 +228,10 @@ export const TeacherModal = props => {
                   console.log(error);
                   toast({
                     title: 'An error occurred',
-                    description: error.response != null ? error.response.data.error : error.message,
+                    description:
+                      error.response != null
+                        ? error.response.data.error
+                        : error.message,
                     status: 'error',
                     duration: '2000',
                     isClosable: true,
@@ -286,13 +291,22 @@ export const TeacherModal = props => {
                   <List spacing={3}>
                     {formik.values.subjects.map(subject => (
                       <ListItem
-                        bg={'blackAlpha.200'}
+                      bgColor={'green.200'}
                         px={3}
                         py={2}
-                        borderRadius={3}
+                        rounded={10}
                         key={subject._id}
                       >
                         <HStack>
+                          <Center>
+                            <WrapItem>
+                              <Avatar
+                                size="sm"
+                                name={subject.name}
+                                src={subject.pic_url}
+                              />
+                            </WrapItem>
+                          </Center>
                           <Text>{subject.name}</Text>
                           <Spacer />
                           <DeleteIcon

@@ -77,7 +77,7 @@ export const AddTeacherSubjectModal = props => {
       });
       console.log(error);
     }
-  }, []);
+  }, [props]);
 
   return (
     <>

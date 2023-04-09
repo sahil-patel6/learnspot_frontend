@@ -67,7 +67,8 @@ export const ParentCard = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response != null ? error.response.data.error : error.message,
+        description:
+          error.response != null ? error.response.data.error : error.message,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -109,15 +110,24 @@ export const ParentCard = props => {
               Students:{' '}
             </Text>
             {props.parent.students.map(student => (
-              <Box
+              <HStack
                 bgColor={'green.200'}
                 p={2}
-                rounded={5}
+                rounded={10}
                 key={student._id}
                 w={'full'}
               >
+                <Center>
+                  <WrapItem>
+                    <Avatar
+                      size="sm"
+                      name={student.name}
+                      src={student.profile_pic}
+                    />
+                  </WrapItem>
+                </Center>
                 <Text>{student.name}</Text>
-              </Box>
+              </HStack>
             ))}
           </VStack>
 

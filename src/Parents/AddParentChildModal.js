@@ -107,7 +107,7 @@ export const AddParentChildModal = props => {
       });
       console.log(error);
     }
-  }, []);
+  }, [props]);
 
   return (
     <>

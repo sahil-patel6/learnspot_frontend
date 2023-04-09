@@ -62,7 +62,8 @@ export const TeacherCard = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response != null ? error.response.data.error : error.message,
+        description:
+          error.response != null ? error.response.data.error : error.message,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -103,17 +104,27 @@ export const TeacherCard = props => {
             <Text fontWeight={'bold'} size={'xs'}>
               Subjects:{' '}
             </Text>
-              {props.teacher.subjects.map(subject => (
-                <Box
-                  bgColor={'green.200'}
-                  p={2}
-                  rounded={5}
-                  key={subject._id}
-                  w={"full"}
-                >
-                  <Text>{subject.name}</Text>
-                </Box>
-              ))}
+            {props.teacher.subjects.map(subject => (
+              <HStack
+                bgColor={'green.200'}
+                p={2}
+                rounded={10}
+                key={subject._id}
+                w={'full'}
+              >
+                <Center>
+                  <WrapItem>
+                    <Avatar
+                      size="sm"
+                      name={subject.name}
+                      src={subject.pic_url}
+                    />
+                  </WrapItem>
+                </Center>
+
+                <Text>{subject.name}</Text>
+              </HStack>
+            ))}
           </VStack>
           <HStack>
             <Button colorScheme={'blue'} onClick={onUpdateTeacher}>

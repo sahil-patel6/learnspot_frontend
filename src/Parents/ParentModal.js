@@ -17,6 +17,8 @@ import {
   List,
   HStack,
   Center,
+  WrapItem,
+  Avatar,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 
@@ -224,7 +226,10 @@ export const ParentModal = props => {
                   console.log(error);
                   toast({
                     title: 'An error occurred',
-                    description: error.response != null ? error.response.data.error : error.message,
+                    description:
+                      error.response != null
+                        ? error.response.data.error
+                        : error.message,
                     status: 'error',
                     duration: '2000',
                     isClosable: true,
@@ -255,16 +260,16 @@ export const ParentModal = props => {
                     type="email"
                     {...formik.getFieldProps('email')}
                   />
-                  
+
                   {formik.touched.phone && formik.errors.phone ? (
-                      <ErrorMessage message={formik.errors.phone} />
-                    ) : null}
-                    <FormLabel htmlFor="phone">Parent Phone:</FormLabel>
-                    <Input
-                      id="phone"
-                      type="number"
-                      {...formik.getFieldProps('phone')}
-                    />
+                    <ErrorMessage message={formik.errors.phone} />
+                  ) : null}
+                  <FormLabel htmlFor="phone">Parent Phone:</FormLabel>
+                  <Input
+                    id="phone"
+                    type="number"
+                    {...formik.getFieldProps('phone')}
+                  />
                   {props.activeParent == null ? (
                     <FormLabel htmlFor="plainPassword">
                       Parent Password:
@@ -284,13 +289,23 @@ export const ParentModal = props => {
                   <List spacing={3}>
                     {formik.values.students.map(student => (
                       <ListItem
-                        bg={'blackAlpha.200'}
+                        bgColor={'green.200'}
                         px={3}
                         py={2}
-                        borderRadius={3}
+                        rounded={10}
                         key={student._id}
                       >
                         <HStack>
+                          <Center>
+                            <WrapItem>
+                              <Avatar
+                                size="sm"
+                                name={student.name}
+                                src={student.profile_pic}
+                              />
+                            </WrapItem>
+                          </Center>
+
                           <Text>{student.name}</Text>
                           <Spacer />
                           <DeleteIcon
