@@ -1,6 +1,6 @@
 export class API {
-  // static BASE_URL = "https://learnspot-api.up.railway.app/api/v1";
-  static BASE_URL = 'http://192.168.1.7:8000/api/v1';
+  static BASE_URL = "https://learnspot-api.up.railway.app/api/v1";
+  // static BASE_URL = 'http://192.168.1.7:8000/api/v1';
 
   static SIGNIN_URL = `${this.BASE_URL}/admin/signin`;
 
