@@ -17,6 +17,10 @@ import {
   Box,
   Text,
   Checkbox,
+  HStack,
+  WrapItem,
+  Avatar,
+  VStack,
 } from '@chakra-ui/react';
 
 import { Formik } from 'formik';
@@ -92,7 +96,10 @@ export const PromoteStudentsModal = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response != null ? error.response.data.error : error.message && error,
+        description:
+          error.response != null
+            ? error.response.data.error
+            : error.message && error,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -121,7 +128,8 @@ export const PromoteStudentsModal = props => {
       console.log(error);
       toast({
         title: 'An error occurred',
-        description: error.response != null ? error.response.data.error : error.message,
+        description:
+          error.response != null ? error.response.data.error : error.message,
         status: 'error',
         duration: '2000',
         isClosable: true,
@@ -201,8 +209,12 @@ export const PromoteStudentsModal = props => {
                   try {
                     console.log(props.user._id);
                     let result = null;
-                    console.log(selectedSemester,selectedToSemester, 'INSIDE SUNBMIT');
-                    if (students == null){
+                    console.log(
+                      selectedSemester,
+                      selectedToSemester,
+                      'INSIDE SUNBMIT'
+                    );
+                    if (students == null) {
                       toast({
                         title: 'Please select department and semester',
                         status: 'error',
@@ -210,9 +222,9 @@ export const PromoteStudentsModal = props => {
                         isClosable: true,
                         position: 'top-right',
                       });
-                      return; 
+                      return;
                     }
-                    if (!students.find(s => s.promote === true)){
+                    if (!students.find(s => s.promote === true)) {
                       toast({
                         title: 'Please select atleast one student to promote',
                         status: 'error',
@@ -222,9 +234,10 @@ export const PromoteStudentsModal = props => {
                       });
                       return;
                     }
-                    if (selectedSemester._id == selectedToSemester._id){
+                    if (selectedSemester._id == selectedToSemester._id) {
                       toast({
-                        title: 'Semester and promote to semester should be diffrent',
+                        title:
+                          'Semester and promote to semester should be diffrent',
                         status: 'error',
                         duration: '2000',
                         isClosable: true,
@@ -277,7 +290,10 @@ export const PromoteStudentsModal = props => {
                     console.log(error);
                     toast({
                       title: 'An error occurred',
-                      description: error.response != null ? error.response.data.error : error.message,
+                      description:
+                        error.response != null
+                          ? error.response.data.error
+                          : error.message,
                       status: 'error',
                       duration: '2000',
                       isClosable: true,
@@ -359,6 +375,7 @@ export const PromoteStudentsModal = props => {
                         textAlign={'right'}
                         cursor={'pointer'}
                         mb={1}
+                        mt={-4}
                         onClick={() => {
                           if (!students.find(s => s.promote === true)) {
                             students.map(s => {
@@ -407,11 +424,11 @@ export const PromoteStudentsModal = props => {
                               isChecked={s.promote}
                               w={'full'}
                               bg={'gray.300'}
-                              mt={2}
+                              mb={2}
                               py={2}
                               px={3}
-                              fontSize={16}
                               rounded={10}
+                              float={"right"}
                               onChange={e => {
                                 console.log(e.target.checked);
                                 s.promote = e.target.checked;
@@ -430,7 +447,21 @@ export const PromoteStudentsModal = props => {
                               }}
                               value={s._id}
                             >
-                              <Text>{s.name}</Text>
+                              <HStack>
+                                <Center>
+                                  <WrapItem>
+                                    <Avatar
+                                      size="sm"
+                                      name={s.name}
+                                      src={s.profile_pic}
+                                    />
+                                  </WrapItem>
+                                </Center>
+                                <VStack spacing={0} align={"flex-start"}>
+                                  <Text fontSize={15} m={0} fontWeight={"medium"}>{s.name}</Text>
+                                  <Text fontSize={12} m={0} colorScheme={"gray"}>Roll Number: {s.roll_number}</Text>
+                                </VStack>
+                              </HStack>
                             </Checkbox>
                           ))}
                         </Box>
